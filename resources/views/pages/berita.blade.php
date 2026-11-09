@@ -43,7 +43,7 @@
 @php
     $categories = [
         'Semua',
-        'Edukasi Trading',
+        'Forex',
         'Analisis Pasar',
         'Komoditas',
     ];

@@ -934,54 +934,6 @@
     </div>
 </section>
 
-{{-- JAVASCRIPT TAB KARIER --}}
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    const tabs = document.querySelectorAll('[data-career-tab]');
-    const staffPanel = document.getElementById('career-staff-panel');
-    const internshipPanel = document.getElementById('career-internship-panel');
-    const indicator = document.getElementById('career-tab-indicator');
-
-    if (!tabs.length || !staffPanel || !internshipPanel || !indicator) return;
-
-    function showCareerTab(selectedTab) {
-        const showStaff = selectedTab === 'staff';
-
-        staffPanel.hidden = !showStaff;
-        staffPanel.classList.toggle('hidden', !showStaff);
-
-        internshipPanel.hidden = showStaff;
-        internshipPanel.classList.toggle('hidden', showStaff);
-
-        // Warna indikator
-        indicator.classList.toggle('bg-[#101a30]', showStaff);
-        indicator.classList.toggle('bg-orange-500', !showStaff);
-
-        // Posisi indikator
-        indicator.classList.toggle('translate-x-full', !showStaff);
-
-        // Warna teks tombol
-        tabs.forEach(function (tab) {
-            const active = tab.dataset.careerTab === selectedTab;
-
-            tab.setAttribute('aria-selected', active ? 'true' : 'false');
-            tab.classList.toggle('text-white', active);
-            tab.classList.toggle('text-slate-600', !active);
-            tab.classList.toggle('font-bold', active);
-            tab.classList.toggle('font-semibold', !active);
-        });
-    }
-
-    tabs.forEach(function (tab) {
-        tab.addEventListener('click', function () {
-            showCareerTab(tab.dataset.careerTab);
-        });
-    });
-
-    showCareerTab('staff');
-});
-</script>
-
     {{-- BERITA DAN EDUKASI --}}
     <section class="bg-[#f7f9fc] px-6 pt-6 pb-[60px] sm:px-8 lg:px-10 max-[640px]:pt-6 max-[640px]:pb-[42px]">
         <div class="mx-auto w-full max-w-[1180px]">

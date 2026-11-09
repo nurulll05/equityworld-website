@@ -228,12 +228,21 @@ function initConnectionIndicator() {
 
     if (!indicator) return;
 
-    function updateConnectionStatus() {
-        const connection =
-            navigator.connection ||
-            navigator.mozConnection ||
-            navigator.webkitConnection;
+    const connection =
+        navigator.connection ||
+        navigator.mozConnection ||
+        navigator.webkitConnection;
 
+    const statusClasses = [
+        'bg-emerald-400',
+        'bg-red-500',
+        'bg-orange-400',
+        'shadow-[0_0_12px_rgba(52,211,153,0.8)]',
+        'shadow-[0_0_12px_rgba(239,68,68,0.8)]',
+        'shadow-[0_0_12px_rgba(251,146,60,0.8)]'
+    ];
+
+    function updateConnectionStatus() {
         let color = 'bg-emerald-400';
         let shadow = 'shadow-[0_0_12px_rgba(52,211,153,0.8)]';
         let status = 'Koneksi lancar';
@@ -264,8 +273,8 @@ function initConnectionIndicator() {
             }
         }
 
-        indicator.className =
-            `h-2.5 w-2.5 shrink-0 rounded-full animate-pulse ${color} ${shadow}`;
+        indicator.classList.remove(...statusClasses);
+        indicator.classList.add(color, shadow);
 
         indicator.setAttribute('aria-label', status);
         indicator.setAttribute('title', status);
@@ -275,11 +284,6 @@ function initConnectionIndicator() {
 
     window.addEventListener('online', updateConnectionStatus);
     window.addEventListener('offline', updateConnectionStatus);
-
-    const connection =
-        navigator.connection ||
-        navigator.mozConnection ||
-        navigator.webkitConnection;
 
     if (connection) {
         connection.addEventListener('change', updateConnectionStatus);
