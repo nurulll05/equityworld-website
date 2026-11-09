@@ -1,1008 +1,515 @@
-
 @extends('layouts.app')
 
-@section('title', 'Berita dan Informasi | PT Equityworld Futures')
+@section('title', 'Berita, Analisis & Edukasi | PT Equityworld Futures')
 
-@section('meta_description', 'Informasi ekonomi, pasar keuangan, regulasi, dan perdagangan dari sumber resmi dan tepercaya.')
+@section('meta_description', 'Update perkembangan pasar keuangan, komoditas, dan berita ekonomi terkini.')
 
 @section('content')
 
 <style>
-    /* ==============================
-       NEWS PAGE - EQUITYWORLD FUTURES
-    ============================== */
-
-    .ew-news {
-        --ew-navy: #102b52;
-        --ew-blue: #1556a0;
-        --ew-light-blue: #eaf2fc;
-        --ew-text: #263b59;
-        --ew-muted: #64748b;
-
-        background: #f5f8fc;
-        color: var(--ew-text);
-        padding-bottom: 48px;
-        font-family: inherit;
-    }
-
-    .ew-news *,
-    .ew-news *::before,
-    .ew-news *::after {
-        box-sizing: border-box;
-    }
-
-    .ew-news a {
-        text-decoration: none;
-    }
-
-    .ew-news-hero {
-        position: relative;
-        overflow: hidden;
-        min-height: 300px;
-        display: flex;
-        align-items: center;
-        background:
-            linear-gradient(
-                90deg,
-                rgba(235, 244, 255, .99) 0%,
-                rgba(235, 244, 255, .96) 40%,
-                rgba(235, 244, 255, .15) 100%
-            ),
-            url('https://images.unsplash.com/photo-1460925895917-afdad827c52f?auto=format&fit=crop&w=1800&q=85')
-            center 48% / cover no-repeat;
-        border-bottom: 1px solid #dce7f5;
-    }
-
-    .ew-news-hero::after {
-        content: "";
-        position: absolute;
-        top: 0;
-        right: 25%;
-        width: 100px;
-        height: 100%;
-        background: rgba(56, 119, 190, .12);
-        transform: skewX(-23deg);
-        pointer-events: none;
-    }
-
-    .ew-news-hero-inner {
-        position: relative;
-        z-index: 1;
-        width: 100%;
-        max-width: 1240px;
-        margin: 0 auto;
-        padding: 55px 28px 60px;
-    }
-
-    .ew-news-eyebrow {
-        display: inline-flex;
-        align-items: center;
-        gap: 12px;
-        color: var(--ew-blue);
-        font-size: 12px;
-        font-weight: 800;
-        letter-spacing: 1.8px;
-        text-transform: uppercase;
-    }
-
-    .ew-news-eyebrow::after {
-        content: "";
-        display: block;
-        width: 36px;
-        height: 2px;
-        background: #72a8e8;
-    }
-
-    .ew-news-hero h1 {
-        max-width: 600px;
-        margin: 18px 0 14px;
-        color: var(--ew-navy);
-        font-size: clamp(32px, 4.5vw, 48px);
-        line-height: 1.15;
-        font-weight: 800;
-        letter-spacing: -1.2px;
-    }
-
-    .ew-news-hero p {
-        max-width: 520px;
-        margin: 0;
-        color: #4e6687;
-        font-size: 15px;
-        line-height: 1.85;
-    }
-
-    .ew-news-container {
-        max-width: 1240px;
-        margin: 0 auto;
-        padding: 40px 28px 0;
-    }
-
-    /* Section heading */
-
-    .ew-news-section-head {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-end;
-        gap: 24px;
-        margin-bottom: 25px;
-    }
-
-    .ew-news-section-head h2 {
-        margin: 0 0 8px;
-        color: var(--ew-navy);
-        font-size: 28px;
-        font-weight: 800;
-        letter-spacing: -.5px;
-    }
-
-    .ew-news-section-head p {
-        max-width: 510px;
-        margin: 0;
-        color: var(--ew-muted);
-        font-size: 14px;
-        line-height: 1.8;
-    }
-
-    /* Category filters */
-
-    .ew-news-filters {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: flex-end;
-        gap: 8px;
-    }
-
-    .ew-news-filter {
-        border: 1px solid #dce6f3;
-        border-radius: 30px;
-        background: #fff;
-        color: #49617f;
-        padding: 10px 17px;
-        font-family: inherit;
-        font-size: 12px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: .2s ease;
-    }
-
-    .ew-news-filter:hover,
-    .ew-news-filter.active {
-        border-color: var(--ew-blue);
-        background: var(--ew-blue);
-        color: #fff;
-    }
-
-    .ew-news-filter:focus-visible,
-    .ew-news-link:focus-visible {
-        outline: 3px solid #8abcf5;
-        outline-offset: 3px;
-    }
-
-    .ew-news-filter:focus:not(:focus-visible) {
+    #newsSearch {
+        box-sizing: border-box !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 12px !important;
         outline: none;
+        box-shadow: none;
+        background-clip: padding-box;
     }
 
-    /* News cards */
-
-    .ew-news-grid {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 22px;
+    #newsSearch:focus {
+        border: 1px solid #3b82f6 !important;
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.12) !important;
     }
 
-    .ew-news-card {
-        min-width: 0;
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        background: #fff;
-        border: 1px solid #e5ebf3;
-        border-radius: 13px;
-        box-shadow: 0 5px 18px rgba(16, 43, 82, .045);
-        transition: transform .25s ease, box-shadow .25s ease;
+    /* GARIS DAN BAYANGAN CARD BERITA */
+    [data-news-card] {
+        border: 1px solid #dce3ed !important;
+        border-radius: 18px;
+        box-shadow: 0 2px 9px rgba(15, 35, 65, 0.07) !important;
+        background-color: #ffffff;
+        transition: transform 0.3s ease,
+                    border-color 0.3s ease,
+                    box-shadow 0.3s ease;
     }
 
-    /*
-       PENTING:
-       CSS display:flex di atas bisa mengalahkan
-       aturan default browser untuk atribut hidden.
-       Aturan ini memastikan kartu benar-benar hilang.
-    */
-    .ew-news-card[hidden] {
-        display: none !important;
-    }
-
-    .ew-news-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 14px 30px rgba(16, 43, 82, .10);
-    }
-
-    .ew-news-image {
-        position: relative;
-        height: 170px;
-        overflow: hidden;
-        background: #dce8f7;
-    }
-
-    .ew-news-image img {
-        display: block;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform .4s ease;
-    }
-
-    .ew-news-card:hover .ew-news-image img {
-        transform: scale(1.045);
-    }
-
-    .ew-news-card-body {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        padding: 20px;
-    }
-
-    .ew-news-category {
-        align-self: flex-start;
-        display: inline-block;
-        margin-bottom: 13px;
-        padding: 6px 10px;
-        border-radius: 5px;
-        background: #e9f2ff;
-        color: #1556a0;
-        font-size: 11px;
-        font-weight: 750;
-    }
-
-    .ew-news-category.green {
-        background: #e1f6f0;
-        color: #147c69;
-    }
-
-    .ew-news-category.purple {
-        background: #f0eaff;
-        color: #7047bc;
-    }
-
-    .ew-news-category.orange {
-        background: #fff0df;
-        color: #a65d11;
-    }
-
-    .ew-news-card h3 {
-        margin: 0 0 11px;
-        color: var(--ew-navy);
-        font-size: 17px;
-        font-weight: 750;
-        line-height: 1.55;
-    }
-
-    .ew-news-card p {
-        margin: 0 0 18px;
-        color: var(--ew-muted);
-        font-size: 13px;
-        line-height: 1.8;
-    }
-
-    .ew-news-meta {
-        display: flex;
-        align-items: flex-start;
-        gap: 9px;
-        margin-top: auto;
-        padding-top: 14px;
-        border-top: 1px solid #edf1f6;
-        color: #61738d;
-        font-size: 12px;
-        line-height: 1.6;
-    }
-
-    .ew-news-meta-icon {
-        flex-shrink: 0;
-        color: #3975bd;
-        font-size: 15px;
-    }
-
-    .ew-news-link {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 10px;
-        margin-top: 16px;
-        padding: 12px 15px;
-        border: 1px solid #e0ebfa;
-        border-radius: 30px;
-        background: #eff5ff;
-        color: #1556a0;
-        font-size: 12px;
-        font-weight: 750;
-        transition: .2s ease;
-    }
-
-    .ew-news-link:hover {
-        background: var(--ew-blue);
-        border-color: var(--ew-blue);
-        color: #fff;
-    }
-
-    .ew-news-link span:last-child {
-        font-size: 17px;
-    }
-
-    .ew-news-empty {
-        padding: 40px 20px;
-        text-align: center;
-        color: var(--ew-muted);
-    }
-
-    .ew-news-empty[hidden] {
-        display: none !important;
-    }
-
-    /* Information note */
-
-    .ew-news-note {
-        position: relative;
-        display: flex;
-        align-items: flex-start;
-        gap: 16px;
-        margin-top: 30px;
-        padding: 22px 24px;
-        overflow: hidden;
-        border: 1px solid #c8def9;
-        border-radius: 12px;
-        background: linear-gradient(110deg, #eaf3ff, #f7faff);
-    }
-
-    .ew-news-note-icon {
-        flex-shrink: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 34px;
-        height: 34px;
-        border-radius: 50%;
-        background: #2b70ca;
-        color: #fff;
-        font-size: 19px;
-        font-weight: 800;
-    }
-
-    .ew-news-note h3 {
-        margin: 0 0 6px;
-        color: var(--ew-navy);
-        font-size: 14px;
-        font-weight: 800;
-    }
-
-    .ew-news-note p {
-        margin: 0;
-        color: #526b8c;
-        font-size: 12px;
-        line-height: 1.8;
-    }
-
-    /* Responsive */
-
-    @media (max-width: 1000px) {
-        .ew-news-section-head {
-            align-items: flex-start;
-            flex-direction: column;
-        }
-
-        .ew-news-filters {
-            justify-content: flex-start;
-        }
-
-        .ew-news-grid {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
-    }
-
-    @media (max-width: 600px) {
-        .ew-news-hero {
-            min-height: auto;
-            background:
-                linear-gradient(
-                    90deg,
-                    rgba(235, 244, 255, .97),
-                    rgba(235, 244, 255, .83)
-                ),
-                url('https://images.unsplash.com/photo-1460925895917-afdad827c52f?auto=format&fit=crop&w=900&q=80')
-                center / cover no-repeat;
-        }
-
-        .ew-news-hero-inner {
-            padding: 45px 20px;
-        }
-
-        .ew-news-hero h1 {
-            font-size: 34px;
-        }
-
-        .ew-news-container {
-            padding: 30px 16px 0;
-        }
-
-        .ew-news-section-head h2 {
-            font-size: 24px;
-        }
-
-        .ew-news-filters {
-            justify-content: flex-start;
-            gap: 7px;
-        }
-
-        .ew-news-filter {
-            padding: 9px 12px;
-            font-size: 11px;
-        }
-
-        .ew-news-grid {
-            grid-template-columns: 1fr;
-            gap: 18px;
-        }
-
-        .ew-news-image {
-            height: 195px;
-        }
-
-        .ew-news-card-body {
-            padding: 19px;
-        }
-
-        .ew-news-note {
-            padding: 18px;
-        }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-        .ew-news-card,
-        .ew-news-image img,
-        .ew-news-link,
-        .ew-news-filter {
-            transition: none;
-        }
-
-        .ew-news-card:hover {
-            transform: none;
-        }
-
-        .ew-news-card:hover .ew-news-image img {
-            transform: none;
-        }
+    [data-news-card]:hover {
+        border-color: #c5d1e0 !important;
+        box-shadow: 0 12px 24px rgba(15, 35, 65, 0.12) !important;
+        transform: translateY(-4px);
     }
 </style>
 
-<div class="ew-news">
+@php
+    $categories = [
+        'Semua',
+        'Edukasi Trading',
+        'Analisis Pasar',
+        'Komoditas',
+    ];
+@endphp
+
+<div class="min-h-screen bg-white">
 
     {{-- HERO --}}
-    <section class="ew-news-hero">
-        <div class="ew-news-hero-inner">
-            <div class="ew-news-eyebrow">
-                Berita &amp; Informasi
-            </div>
+    <section class="relative overflow-hidden bg-gradient-to-br from-[#102746] via-[#142f5b] to-[#1d4385]">
 
-            <h1>Berita Ekonomi &amp;<br>Pasar Keuangan</h1>
-
-            <p>
-                Ikuti perkembangan ekonomi, pasar keuangan, dan
-                regulasi melalui publikasi dari lembaga resmi
-                dan sumber informasi tepercaya.
-            </p>
+        <div class="absolute inset-0 opacity-10"
+             style="background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 25px 25px;">
         </div>
+
+        <div class="relative mx-auto max-w-7xl px-5 py-9 text-center sm:py-12">
+
+            <span class="inline-flex rounded-full border border-orange-400/30 bg-orange-500/10 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-orange-400">
+                Informasi & Wawasan
+            </span>
+
+            <h1 class="mt-4 text-3xl font-extrabold tracking-tight text-white sm:text-4xl md:text-5xl">
+                Berita, Analisis & Edukasi
+            </h1>
+
+            <p class="mx-auto mt-3 max-w-2xl text-sm leading-7 text-blue-100 sm:text-base">
+                Update perkembangan pasar keuangan, komoditas berjangka,
+                dan berita menarik lainnya.
+            </p>
+
+        </div>
+
     </section>
 
-    <main class="ew-news-container">
 
-        {{-- SECTION HEADING --}}
-        <section aria-labelledby="ew-news-title">
-
-            <div class="ew-news-section-head">
-                <div>
-                    <h2 id="ew-news-title">
-                        Sumber Berita &amp; Informasi
-                    </h2>
-
-                    <p>
-                        Pilih kategori untuk menemukan sumber informasi
-                        yang relevan. Buka publikasi aslinya melalui
-                        tautan yang tersedia pada setiap kartu.
-                    </p>
-                </div>
-
-                {{-- FILTER KATEGORI --}}
-                <div
-                    class="ew-news-filters"
-                    role="group"
-                    aria-label="Filter kategori berita">
-
-                    <button
-                        type="button"
-                        class="ew-news-filter active"
-                        data-filter="all"
-                        aria-pressed="true">
-                        Semua
-                    </button>
-
-                    <button
-                        type="button"
-                        class="ew-news-filter"
-                        data-filter="moneter"
-                        aria-pressed="false">
-                        Kebijakan Moneter
-                    </button>
-
-                    <button
-                        type="button"
-                        class="ew-news-filter"
-                        data-filter="keuangan"
-                        aria-pressed="false">
-                        Sektor Keuangan
-                    </button>
-
-                    <button
-                        type="button"
-                        class="ew-news-filter"
-                        data-filter="pasar"
-                        aria-pressed="false">
-                        Analisis Pasar
-                    </button>
-                </div>
-            </div>
-
-            {{-- DAFTAR KARTU BERITA --}}
-            <div class="ew-news-grid">
-
-                {{-- BANK INDONESIA --}}
-                <article
-                    class="ew-news-card"
-                    data-category="moneter">
-
-                    <div class="ew-news-image">
-                        <img
-                            src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=900&q=80"
-                            alt="Gedung perkantoran"
-                            loading="lazy">
-                    </div>
-
-                    <div class="ew-news-card-body">
-
-                        <span class="ew-news-category">
-                            Kebijakan Moneter
-                        </span>
-
-                        <h3>
-                            Informasi Kebijakan Moneter dan Suku Bunga
-                        </h3>
-
-                        <p>
-                            Ikuti pengumuman suku bunga, kebijakan
-                            moneter, inflasi, dan perkembangan ekonomi
-                            Indonesia melalui publikasi resmi Bank
-                            Indonesia.
-                        </p>
-
-                        <div class="ew-news-meta">
-                            <span
-                                class="ew-news-meta-icon"
-                                aria-hidden="true">◉</span>
-
-                            <span>
-                                <strong>Bank Indonesia</strong><br>
-                                Publikasi dan siaran pers resmi
-                            </span>
-                        </div>
-
-                        <a
-                            href="https://www.bi.go.id/id/Publikasi/Ruang-Media/news-release/Default.aspx"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="ew-news-link">
-
-                            <span>Baca di Bank Indonesia</span>
-                            <span aria-hidden="true">↗</span>
-                        </a>
-
-                    </div>
-                </article>
-
-                {{-- OJK --}}
-                <article
-                    class="ew-news-card"
-                    data-category="keuangan">
-
-                    <div class="ew-news-image">
-                        <img
-                            src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=900&q=80"
-                            alt="Gedung dan lingkungan perkantoran"
-                            loading="lazy">
-                    </div>
-
-                    <div class="ew-news-card-body">
-
-                        <span class="ew-news-category purple">
-                            Sektor Keuangan
-                        </span>
-
-                        <h3>
-                            Perkembangan Sektor Jasa Keuangan
-                        </h3>
-
-                        <p>
-                            Baca informasi tentang pengawasan sektor
-                            jasa keuangan, stabilitas sistem keuangan,
-                            perlindungan konsumen, dan regulasi melalui
-                            publikasi OJK.
-                        </p>
-
-                        <div class="ew-news-meta">
-                            <span
-                                class="ew-news-meta-icon"
-                                aria-hidden="true">◉</span>
-
-                            <span>
-                                <strong>Otoritas Jasa Keuangan</strong><br>
-                                Siaran pers dan informasi resmi
-                            </span>
-                        </div>
-
-                        <a
-                            href="https://ojk.go.id/id/berita-dan-kegiatan/siaran-pers/Default.aspx"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="ew-news-link">
-
-                            <span>Baca di situs OJK</span>
-                            <span aria-hidden="true">↗</span>
-                        </a>
-
-                    </div>
-                </article>
-
-                {{-- KEMENKO PEREKONOMIAN --}}
-                <article
-                    class="ew-news-card"
-                    data-category="pasar">
-
-                    <div class="ew-news-image">
-                        <img
-                            src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=900&q=80"
-                            alt="Grafik pergerakan pasar keuangan"
-                            loading="lazy">
-                    </div>
-
-                    <div class="ew-news-card-body">
-
-                        <span class="ew-news-category green">
-                            Analisis Pasar
-                        </span>
-
-                        <h3>
-                            Informasi Pasar dan Perkembangan Ekonomi
-                        </h3>
-
-                        <p>
-                            Telusuri publikasi dan laporan ekonomi
-                            yang diterbitkan Kementerian Koordinator
-                            Bidang Perekonomian untuk memahami kondisi
-                            ekonomi dan pasar.
-                        </p>
-
-                        <div class="ew-news-meta">
-                            <span
-                                class="ew-news-meta-icon"
-                                aria-hidden="true">◉</span>
-
-                            <span>
-                                <strong>Kemenko Perekonomian</strong><br>
-                                Publikasi ekonomi dan pasar
-                            </span>
-                        </div>
-
-                        <a
-                            href="https://www.ekon.go.id/publikasi"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="ew-news-link">
-
-                            <span>Lihat publikasi</span>
-                            <span aria-hidden="true">↗</span>
-                        </a>
-
-                    </div>
-                </article>
-
-                {{-- BPS --}}
-                <article
-                    class="ew-news-card"
-                    data-category="pasar">
-
-                    <div class="ew-news-image">
-                        <img
-                            src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=900&q=80"
-                            alt="Visualisasi data dan statistik"
-                            loading="lazy">
-                    </div>
-
-                    <div class="ew-news-card-body">
-
-                        <span class="ew-news-category orange">
-                            Data Ekonomi
-                        </span>
-
-                        <h3>
-                            Statistik dan Indikator Ekonomi Indonesia
-                        </h3>
-
-                        <p>
-                            Akses data inflasi, perdagangan, pertumbuhan
-                            ekonomi, dan indikator statistik lain untuk
-                            memperoleh gambaran kondisi perekonomian
-                            Indonesia.
-                        </p>
-
-                        <div class="ew-news-meta">
-                            <span
-                                class="ew-news-meta-icon"
-                                aria-hidden="true">◉</span>
-
-                            <span>
-                                <strong>Badan Pusat Statistik</strong><br>
-                                Berita resmi dan publikasi statistik
-                            </span>
-                        </div>
-
-                        <a
-                            href="https://www.bps.go.id/id/pressrelease"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="ew-news-link">
-
-                            <span>Baca berita BPS</span>
-                            <span aria-hidden="true">↗</span>
-                        </a>
-
-                    </div>
-                </article>
-
-                {{-- ANTARA --}}
-                <article
-                    class="ew-news-card"
-                    data-category="pasar">
-
-                    <div class="ew-news-image">
-                        <img
-                            src="https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=900&q=80"
-                            alt="Uang dan kegiatan ekonomi"
-                            loading="lazy">
-                    </div>
-
-                    <div class="ew-news-card-body">
-
-                        <span class="ew-news-category">
-                            Berita Ekonomi
-                        </span>
-
-                        <h3>
-                            Berita Ekonomi dan Bisnis Terkini
-                        </h3>
-
-                        <p>
-                            Ikuti laporan jurnalistik tentang
-                            perkembangan ekonomi nasional, bisnis,
-                            kebijakan pemerintah, dan dinamika
-                            perdagangan melalui kantor berita Antara.
-                        </p>
-
-                        <div class="ew-news-meta">
-                            <span
-                                class="ew-news-meta-icon"
-                                aria-hidden="true">◉</span>
-
-                            <span>
-                                <strong>ANTARA News</strong><br>
-                                Berita ekonomi dan bisnis
-                            </span>
-                        </div>
-
-                        <a
-                            href="https://www.antaranews.com/ekonomi"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="ew-news-link">
-
-                            <span>Baca berita ekonomi</span>
-                            <span aria-hidden="true">↗</span>
-                        </a>
-
-                    </div>
-                </article>
-
-                {{-- REUTERS --}}
-                <article
-                    class="ew-news-card"
-                    data-category="pasar">
-
-                    <div class="ew-news-image">
-                        <img
-                            src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=900&q=80"
-                            alt="Informasi dan berita"
-                            loading="lazy">
-                    </div>
-
-                    <div class="ew-news-card-body">
-
-                        <span class="ew-news-category purple">
-                            Pasar Global
-                        </span>
-
-                        <h3>
-                            Perkembangan Pasar Keuangan Internasional
-                        </h3>
-
-                        <p>
-                            Baca laporan internasional mengenai pasar
-                            saham, mata uang, komoditas, dan perkembangan
-                            ekonomi global melalui kanal pasar Reuters.
-                        </p>
-
-                        <div class="ew-news-meta">
-                            <span
-                                class="ew-news-meta-icon"
-                                aria-hidden="true">◉</span>
-
-                            <span>
-                                <strong>Reuters</strong><br>
-                                Berita pasar internasional
-                            </span>
-                        </div>
-
-                        <a
-                            href="https://www.reuters.com/markets/"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="ew-news-link">
-
-                            <span>Baca berita pasar global</span>
-                            <span aria-hidden="true">↗</span>
-                        </a>
-
-                    </div>
-                </article>
+    {{-- SEARCH DAN FILTER --}}
+    <section class="relative z-10 mx-auto -mt-7 max-w-6xl px-5">
+
+        <div class="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-lg md:flex-row md:items-center md:justify-between">
+
+            {{-- LIVE SEARCH --}}
+            <div class="relative w-full md:max-w-sm">
+
+                <svg
+                    class="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
+                    <circle cx="11" cy="11" r="7"/>
+                    <path d="m16 16 4 4"/>
+                </svg>
+
+                <input
+                    id="newsSearch"
+                    type="text"
+                    value="{{ $search ?? '' }}"
+                    autocomplete="off"
+                    placeholder="Cari judul atau kata kunci..."
+                    aria-label="Cari berita"
+                    class="!block !h-12 !w-full !appearance-none !rounded-xl !border !border-solid !border-slate-300 !bg-slate-50 !py-0 !pl-11 !pr-4 !text-sm !leading-normal !text-slate-700 !outline-none !shadow-none transition placeholder:!text-slate-400 focus:!border-blue-500 focus:!bg-white focus:!ring-2 focus:!ring-blue-100"
+                >
+
+                <button
+                    type="button"
+                    id="clearNewsSearch"
+                    aria-label="Hapus pencarian"
+                    class="absolute right-3 top-1/2 hidden h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full text-lg text-slate-400 transition hover:bg-slate-200 hover:text-slate-700"
+                >
+                    &times;
+                </button>
 
             </div>
 
-            {{-- PESAN JIKA TIDAK ADA BERITA --}}
-            <div
-                class="ew-news-empty"
-                role="status"
-                aria-live="polite"
-                hidden>
 
-                Tidak ada sumber berita dalam kategori ini.
+            {{-- FILTER KATEGORI --}}
+            <div class="flex flex-wrap items-center gap-2">
+
+                @foreach($categories as $category)
+
+                    <a
+                        href="{{ route('news', array_filter([
+                            'category' => $category !== 'Semua' ? $category : null,
+                        ])) }}"
+                        class="rounded-xl px-4 py-2.5 text-xs font-semibold transition
+                        {{ $selectedCategory === $category
+                            ? 'bg-[#102b52] text-white shadow-sm'
+                            : 'bg-slate-100 text-slate-600 hover:bg-blue-50 hover:text-blue-700' }}"
+                    >
+                        {{ $category }}
+                    </a>
+
+                @endforeach
+
             </div>
 
-        </section>
+        </div>
 
-        {{-- CATATAN INFORMASI --}}
-        <aside class="ew-news-note">
+    </section>
 
-            <div
-                class="ew-news-note-icon"
-                aria-hidden="true">i</div>
+
+    {{-- DAFTAR BERITA --}}
+    <section class="mx-auto max-w-7xl px-5 pb-16 pt-12">
+
+        {{-- JUDUL SECTION --}}
+        <div class="mb-7 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
 
             <div>
-                <h3>Catatan Informasi</h3>
 
-                <p>
-                    Halaman ini menyediakan tautan menuju sumber berita
-                    dan publikasi eksternal. Judul kartu merupakan
-                    deskripsi kategori informasi, bukan klaim berita
-                    terbaru tertentu. Tanggal dan isi publikasi perlu
-                    diperiksa pada situs sumber masing-masing.
-                    Informasi ini ditujukan untuk edukasi dan bukan
-                    merupakan rekomendasi transaksi atau nasihat investasi.
+                <p class="text-xs font-bold uppercase tracking-widest text-orange-500">
+                    Informasi Terkini
                 </p>
+
+                <h2 class="mt-2 text-2xl font-extrabold text-[#102b52] sm:text-3xl">
+                    Berita Terbaru
+                </h2>
+
+                <p class="mt-2 text-sm text-slate-500">
+                    Temukan informasi dan wawasan seputar dunia keuangan.
+                </p>
+
             </div>
 
-        </aside>
+            <p class="text-sm text-slate-500">
+                Total
+                <strong class="text-[#102b52]">
+                    {{ $news->total() }}
+                </strong>
+                berita tersedia
+            </p>
 
-    </main>
+        </div>
+
+
+        {{-- GRID BERITA --}}
+        @if($news->count() > 0)
+
+            <div
+                id="newsGrid"
+                class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+            >
+
+                @foreach($news as $item)
+
+                    <article
+                        data-news-card
+                        data-category="{{ $item['category'] }}"
+                        class="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_2px_8px_rgba(15,23,42,0.06)] transition duration-300 hover:-translate-y-1 hover:border-slate-300 hover:shadow-xl"
+                    >
+
+                        {{-- GAMBAR --}}
+                        <div class="relative h-52 overflow-hidden bg-slate-100">
+
+                            <img
+                                src="{{ $item['image'] ?: 'https://placehold.co/900x500/eaf0f8/17345f?text=Equityworld+Futures' }}"
+                                alt="{{ $item['title'] }}"
+                                loading="lazy"
+                                class="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                                onerror="this.onerror=null;this.src='https://placehold.co/900x500/eaf0f8/17345f?text=Equityworld+Futures';"
+                            >
+
+                            <span class="absolute left-4 top-4 rounded-md bg-[#0879bd] px-3 py-1.5 text-xs font-bold text-white shadow">
+                                {{ $item['category'] }}
+                            </span>
+
+                        </div>
+
+
+                        {{-- KONTEN KARTU --}}
+                        <div class="flex flex-1 flex-col p-5">
+
+                            {{-- TANGGAL --}}
+                            <div class="mb-3 flex items-center gap-2 text-xs text-slate-400">
+
+                                <svg
+                                    class="h-4 w-4 shrink-0"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <rect x="3" y="5" width="18" height="16" rx="2" stroke-width="1.7"/>
+                                    <path d="M16 3v4M8 3v4M3 10h18" stroke-width="1.7"/>
+                                </svg>
+
+                                {{ \Carbon\Carbon::parse($item['date'])->translatedFormat('d F Y') }}
+
+                            </div>
+
+
+                            {{-- JUDUL --}}
+                            <h3 class="text-base font-bold leading-snug text-[#102b52] transition group-hover:text-blue-700">
+                                {{ $item['title'] }}
+                            </h3>
+
+
+                            {{-- RINGKASAN --}}
+                            <p class="mt-3 line-clamp-3 text-sm leading-6 text-slate-500">
+                                {{ $item['excerpt'] }}
+                            </p>
+
+
+                            {{-- SUMBER DAN LINK --}}
+                            <div class="mt-auto border-t border-slate-100 pt-4">
+
+                                <p class="text-xs text-slate-400">
+                                    Sumber berita
+                                </p>
+
+                                <p class="mt-1 text-sm font-bold text-slate-700">
+                                    {{ $item['source'] }}
+                                </p>
+
+                                <a
+                                    href="{{ $item['url'] }}"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="mt-4 inline-flex items-center gap-2 text-sm font-bold text-orange-600 transition hover:text-orange-700"
+                                >
+                                    Baca Selengkapnya
+
+                                    <svg
+                                        class="h-4 w-4 transition group-hover:translate-x-1"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            d="M5 12h14m-6-6 6 6-6 6"
+                                            stroke-width="2"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                        />
+                                    </svg>
+
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                @endforeach
+
+            </div>
+
+        @else
+
+            {{-- PESAN JIKA BERITA TIDAK DITEMUKAN --}}
+            <div class="rounded-2xl border border-slate-200 bg-slate-50 px-5 py-16 text-center">
+
+                <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 text-blue-700">
+
+                    <svg
+                        class="h-8 w-8"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <circle cx="11" cy="11" r="7" stroke-width="2"/>
+                        <path d="m16 16 4 4" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+
+                </div>
+
+                <h3 class="mt-5 text-lg font-bold text-[#102b52]">
+                    {{ !empty($search) ? 'Berita tidak ditemukan' : 'Belum ada berita' }}
+                </h3>
+
+                <p class="mt-2 text-sm text-slate-500">
+                    {{ !empty($search)
+                        ? 'Tidak ada berita yang mengandung kata pencarian tersebut. Silakan coba kata kunci lainnya.'
+                        : 'Berita belum tersedia pada kategori ini.' }}
+                </p>
+
+            </div>
+
+        @endif
+
+
+        {{-- PAGINATION --}}
+        @if($news->hasPages())
+
+            <div id="newsPagination" class="mt-12">
+
+                <div class="flex items-center justify-center gap-2">
+
+                    {{-- PANAH SEBELUMNYA --}}
+                    @if($news->onFirstPage())
+
+                        <span class="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 text-slate-300 cursor-not-allowed">
+                            &lsaquo;
+                        </span>
+
+                    @else
+
+                        <a
+                            href="{{ $news->previousPageUrl() }}"
+                            class="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-300 text-[#102b52] transition hover:bg-blue-50"
+                        >
+                            &lsaquo;
+                        </a>
+
+                    @endif
+
+
+                    {{-- MAKSIMAL 3 NOMOR HALAMAN --}}
+                    @php
+                        $current = $news->currentPage();
+                        $last = $news->lastPage();
+
+                        $start = max(1, min($current - 1, $last - 2));
+                        $end = min($last, $start + 2);
+                    @endphp
+
+                    @foreach($news->getUrlRange($start, $end) as $page => $url)
+
+                        <a
+                            href="{{ $url }}"
+                            class="flex h-10 min-w-10 items-center justify-center rounded-xl border px-3 text-sm font-semibold transition
+                            {{ $current == $page
+                                ? 'border-[#102b52] bg-[#102b52] text-white shadow-sm'
+                                : 'border-slate-300 bg-white text-[#102b52] hover:border-blue-400 hover:bg-blue-50' }}"
+                        >
+                            {{ $page }}
+                        </a>
+
+                    @endforeach
+
+
+                    {{-- PANAH SELANJUTNYA --}}
+                    @if($news->hasMorePages())
+
+                        <a
+                            href="{{ $news->nextPageUrl() }}"
+                            class="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-300 text-[#102b52] transition hover:bg-blue-50"
+                        >
+                            &rsaquo;
+                        </a>
+
+                    @else
+
+                        <span class="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 text-slate-300 cursor-not-allowed">
+                            &rsaquo;
+                        </span>
+
+                    @endif
+
+                </div>
+
+            </div>
+
+        @endif
+
+
+        {{-- CATATAN INFORMASI --}}
+        <div class="mt-10 rounded-2xl border border-blue-100 bg-[#f1f6ff] px-5 py-4 sm:px-6">
+
+            <div class="flex items-start gap-4">
+
+                {{-- IKON INFORMASI --}}
+                <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border border-blue-200 bg-blue-50 text-blue-700">
+
+                    <svg
+                        class="h-4 w-4"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                    >
+                        <circle cx="12" cy="12" r="9"/>
+                        <path d="M12 11v5"/>
+                        <path d="M12 8h.01"/>
+                    </svg>
+
+                </div>
+
+
+                {{-- TEKS INFORMASI --}}
+                <div class="min-w-0">
+
+                    <h3 class="text-sm font-bold text-[#102b52] sm:text-base">
+                        Catatan Informasi
+                    </h3>
+
+                    <p class="mt-2 text-sm leading-6 text-slate-600">
+                        Informasi ini disajikan untuk edukasi dan wawasan, bukan sebagai rekomendasi transaksi atau nasihat investasi.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
 </div>
 
+
+{{-- LIVE SEARCH JAVASCRIPT --}}
 <script>
-(function () {
-    function initNewsFilter() {
-        const newsRoot = document.querySelector('.ew-news');
 
-        if (!newsRoot) {
-            return;
-        }
+document.addEventListener('DOMContentLoaded', function () {
 
-        // Hindari memasang event listener berulang
-        // apabila inisialisasi dipanggil lebih dari sekali.
-        if (newsRoot.dataset.filterInitialized === 'true') {
-            return;
-        }
+    const searchInput = document.getElementById('newsSearch');
+    const clearButton = document.getElementById('clearNewsSearch');
 
-        newsRoot.dataset.filterInitialized = 'true';
+    if (!searchInput || !clearButton) return;
 
-        const filterButtons = newsRoot.querySelectorAll(
-            '.ew-news-filter'
-        );
+    let searchTimer;
 
-        const cards = newsRoot.querySelectorAll(
-            '.ew-news-card'
-        );
+    function updateClearButton() {
+        const hasText = searchInput.value.trim().length > 0;
 
-        const emptyMessage = newsRoot.querySelector(
-            '.ew-news-empty'
-        );
+        clearButton.classList.toggle('hidden', !hasText);
+        clearButton.classList.toggle('flex', hasText);
+    }
 
-        function applyFilter(selectedCategory, activeButton) {
-            let visibleCount = 0;
+    searchInput.addEventListener('input', function () {
 
-            // Perbarui status tombol filter
-            filterButtons.forEach(function (button) {
-                const isActive = button === activeButton;
+        updateClearButton();
+        clearTimeout(searchTimer);
 
-                button.classList.toggle('active', isActive);
-                button.setAttribute(
-                    'aria-pressed',
-                    String(isActive)
-                );
-            });
+        searchTimer = setTimeout(function () {
 
-            // Tampilkan kartu sesuai kategori
-            cards.forEach(function (card) {
-                const cardCategory = card.dataset.category;
+            const url = new URL(window.location.href);
+            const keyword = searchInput.value.trim();
 
-                const matches =
-                    selectedCategory === 'all' ||
-                    cardCategory === selectedCategory;
+            url.searchParams.delete('page');
 
-                card.hidden = !matches;
-
-                if (matches) {
-                    visibleCount++;
-                }
-            });
-
-            // Tampilkan pesan jika tidak ada kartu yang cocok
-            if (emptyMessage) {
-                emptyMessage.hidden = visibleCount > 0;
+            if (keyword) {
+                url.searchParams.set('search', keyword);
+            } else {
+                url.searchParams.delete('search');
             }
-        }
 
-        filterButtons.forEach(function (button) {
-            button.addEventListener('click', function () {
-                applyFilter(button.dataset.filter, button);
-            });
-        });
+            window.location.href = url.toString();
 
-        // Terapkan filter awal berdasarkan tombol aktif.
-        const activeButton =
-            newsRoot.querySelector('.ew-news-filter.active') ||
-            filterButtons[0];
+        }, 400);
+    });
 
-        if (activeButton) {
-            applyFilter(activeButton.dataset.filter, activeButton);
-        }
-    }
+    clearButton.addEventListener('click', function () {
 
-    // Berjalan baik ketika script dimuat sebelum maupun
-    // setelah DOM selesai diproses oleh browser.
-    if (document.readyState === 'loading') {
-        document.addEventListener(
-            'DOMContentLoaded',
-            initNewsFilter,
-            { once: true }
-        );
-    } else {
-        initNewsFilter();
-    }
-})();
+        clearTimeout(searchTimer);
+
+        searchInput.value = '';
+        updateClearButton();
+
+        const url = new URL(window.location.href);
+
+        url.searchParams.delete('search');
+        url.searchParams.delete('page');
+
+        window.location.href = url.toString();
+    });
+
+    updateClearButton();
+
+});
 </script>
 
 @endsection
