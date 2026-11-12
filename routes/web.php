@@ -15,3 +15,9 @@ Route::view('/magang', 'pages.magang')->name('internship');
 Route::get('/berita', [NewsController::class, 'index'])->name('news');
 Route::view('/kontak', 'pages.kontak')->name('contact');
 Route::view('/registrasi', 'pages.registrasi')->name('registration');
+Route::view('/form-staff', 'pages.form-staff')
+    ->name('form.staff');
+Route::view('/form-magang', 'pages.form-magang')
+    ->name('form.magang');
+Route::view('/persyaratan', 'pages.persyaratan')
+    ->name('persyaratan');

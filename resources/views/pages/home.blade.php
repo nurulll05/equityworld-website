@@ -741,7 +741,7 @@
         {{-- PANEL STAFF --}}
         <div
             id="career-staff-panel"
-            class="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
+            class="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 [&[hidden]]:!hidden"
             role="tabpanel"
             aria-labelledby="tab-staff"
         >
@@ -756,7 +756,7 @@
                     Staff Kantor
                 </h3>
 
-                <p class="mt-2 text-[10px] leading-[1.7] text-slate-500">
+                <p class="mt-3 text-[10px] leading-[1.7] text-slate-500">
                     Membangun hubungan profesional dengan calon nasabah,
                     memberikan konsultasi strategi transaksi, serta
                     analisis pasar komoditi.
@@ -767,10 +767,10 @@
                         KUALIFIKASI UTAMA:
                     </h4>
 
-                    <ul class="space-y-1.5 text-[10px] leading-relaxed text-slate-600">
-                        <li>✓ Pendidikan minimal SMA</li>
-                        <li>✓ Memiliki komunikasi yang baik</li>
-                        <li>✓ Berorientasi pada target</li>
+                    <ul class="space-y-2 text-[10px] leading-relaxed text-slate-600">
+                        <li> Pendidikan minimal SMA</li>
+                        <li> Memiliki komunikasi yang baik</li>
+                        <li> Berorientasi pada target</li>
                     </ul>
                 </div>
 
@@ -790,7 +790,7 @@
                     Business Consultant
                 </h3>
 
-                <p class="mt-2 text-[10px] leading-[1.7] text-slate-500">
+                <p class="mt-3 text-[10px] leading-[1.7] text-slate-500">
                     Program pengembangan profesional untuk membangun
                     kemampuan konsultasi, komunikasi bisnis, dan
                     pengembangan hubungan dengan nasabah.
@@ -801,10 +801,10 @@
                         KUALIFIKASI UTAMA:
                     </h4>
 
-                    <ul class="space-y-1.5 text-[10px] leading-relaxed text-slate-600">
-                        <li>✓ Fresh graduate dipersilakan</li>
-                        <li>✓ Disiplin dan jujur</li>
-                        <li>✓ Memiliki kemampuan komunikasi</li>
+                    <ul class="space-y-2 text-[10px] leading-relaxed text-slate-600">
+                        <li> Fresh graduate dipersilakan</li>
+                        <li> Disiplin dan jujur</li>
+                        <li> Memiliki kemampuan komunikasi</li>
                     </ul>
                 </div>
 
@@ -824,7 +824,7 @@
                     Driver
                 </h3>
 
-                <p class="mt-2 text-[10px] leading-[1.7] text-slate-500">
+                <p class="mt-3 text-[10px] leading-[1.7] text-slate-500">
                     Mendukung kebutuhan transportasi dan operasional
                     perusahaan dengan mengutamakan keselamatan,
                     ketepatan waktu, serta pelayanan profesional.
@@ -835,10 +835,10 @@
                         KUALIFIKASI UTAMA:
                     </h4>
 
-                    <ul class="space-y-1.5 text-[10px] leading-relaxed text-slate-600">
-                        <li>✓ Memiliki SIM A aktif</li>
-                        <li>✓ Teliti dan bertanggung jawab</li>
-                        <li>✓ Memiliki pengalaman mengemudi</li>
+                    <ul class="space-y-2 text-[10px] leading-relaxed text-slate-600">
+                        <li> Memiliki SIM A aktif</li>
+                        <li> Teliti dan bertanggung jawab</li>
+                        <li> Memiliki pengalaman mengemudi</li>
                     </ul>
                 </div>
 
@@ -869,7 +869,7 @@
                     Magang SMA/SMK
                 </h3>
 
-                <p class="mt-2 text-[10px] leading-[1.7] text-slate-500">
+                <p class="mt-3 text-[10px] leading-[1.7] text-slate-500">
                     Kesempatan bagi siswa SMA/SMK untuk memperoleh
                     pengalaman kerja secara langsung, mengenal
                     lingkungan profesional, serta mengembangkan
@@ -881,10 +881,10 @@
                         KUALIFIKASI UMUM:
                     </h4>
 
-                    <ul class="space-y-1.5 text-[10px] leading-relaxed text-slate-600">
-                        <li>✓ Siswa aktif SMA/SMK atau sederajat</li>
-                        <li>✓ Memiliki kemauan belajar</li>
-                        <li>✓ Disiplin dan bertanggung jawab</li>
+                    <ul class="space-y-2 text-[10px] leading-relaxed text-slate-600">
+                        <li> Siswa aktif SMA/SMK atau sederajat</li>
+                        <li> Memiliki kemauan belajar</li>
+                        <li>  Disiplin dan bertanggung jawab</li>
                     </ul>
                 </div>
 
@@ -916,10 +916,10 @@
                         KUALIFIKASI UMUM:
                     </h4>
 
-                    <ul class="space-y-1.5 text-[10px] leading-relaxed text-slate-600">
-                        <li>✓ Mahasiswa aktif perguruan tinggi</li>
-                        <li>✓ Memiliki minat untuk belajar</li>
-                        <li>✓ Mampu bekerja sama dan bertanggung jawab</li>
+                    <ul class="space-y-2 text-[10px] leading-relaxed text-slate-600">
+                        <li> Mahasiswa aktif perguruan tinggi</li>
+                        <li> Memiliki minat untuk belajar</li>
+                        <li>  Mampu bekerja sama dan bertanggung jawab</li>
                     </ul>
                 </div>
 

@@ -1,8 +1,7 @@
-
 import './bootstrap';
 
 document.addEventListener('DOMContentLoaded', () => {
-    
+
     // 1. MENU HAMBURGER MOBILE
     const menuToggle = document.getElementById('ewf-mobile-toggle');
     const mobilePanel = document.getElementById('ewf-mobile-panel');
@@ -68,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-        // 2. DROPDOWN LOGIN DESKTOP
+    // 2. DROPDOWN LOGIN DESKTOP
     const loginToggle = document.getElementById('ewf-login-toggle');
     const loginDropdown = document.getElementById('ewf-login-dropdown');
 
@@ -177,49 +176,61 @@ document.addEventListener('DOMContentLoaded', () => {
     const careerTabs = document.querySelectorAll('[data-career-tab]');
     const staffPanel = document.getElementById('career-staff-panel');
     const internshipPanel = document.getElementById('career-internship-panel');
-    const indicator = document.getElementById('career-tab-indicator');
+    const careerIndicator = document.getElementById('career-tab-indicator');
 
-    if (
-        careerTabs.length > 0 &&
-        staffPanel &&
-        internshipPanel &&
-        indicator
-    ) {
-        function showCareerTab(selectedTab) {
-            const showStaff = selectedTab === 'staff';
+    function showCareerTab(selectedTab) {
+        const showStaff = selectedTab === 'staff';
 
-            // Tampilkan panel yang dipilih
-            staffPanel.hidden = !showStaff;
-            staffPanel.classList.toggle('hidden', !showStaff);
-
-            internshipPanel.hidden = showStaff;
-            internshipPanel.classList.toggle('hidden', showStaff);
-
-            // Warna dan posisi indikator
-            indicator.classList.toggle('bg-[#101a30]', showStaff);
-            indicator.classList.toggle('bg-orange-500', !showStaff);
-            indicator.classList.toggle('translate-x-full', !showStaff);
-
-            // Tampilan tombol tab
-            careerTabs.forEach((tab) => {
-                const isActive = tab.dataset.careerTab === selectedTab;
-
-                tab.setAttribute('aria-selected', String(isActive));
-                tab.classList.toggle('text-white', isActive);
-                tab.classList.toggle('text-slate-600', !isActive);
-                tab.classList.toggle('font-bold', isActive);
-                tab.classList.toggle('font-semibold', !isActive);
-            });
-        }
-
+        // Atur warna tombol aktif
         careerTabs.forEach((tab) => {
-            tab.addEventListener('click', () => {
-                showCareerTab(tab.dataset.careerTab);
-            });
+            const isActive = tab.dataset.careerTab === selectedTab;
+
+            tab.setAttribute('aria-selected', String(isActive));
+            tab.setAttribute('tabindex', isActive ? '0' : '-1');
+
+            tab.classList.toggle('text-white', isActive);
+            tab.classList.toggle('font-bold', isActive);
+            tab.classList.toggle('text-slate-600', !isActive);
+            tab.classList.toggle('font-semibold', !isActive);
+
+            // Halaman Karier: warna langsung pada tombol
+            if (!careerIndicator) {
+                tab.classList.toggle('bg-[#101a30]', isActive && showStaff);
+                tab.classList.toggle('bg-orange-500', isActive && !showStaff);
+                tab.classList.toggle('bg-transparent', !isActive);
+            }
         });
 
-        showCareerTab('staff');
+        // Halaman Beranda: gerakkan indikator aktif
+        if (careerIndicator) {
+            careerIndicator.style.transform = showStaff
+                ? 'translateX(0)'
+                : 'translateX(100%)';
+
+            careerIndicator.classList.toggle('bg-[#101a30]', showStaff);
+            careerIndicator.classList.toggle('bg-orange-500', !showStaff);
+        }
+
+        // Tampilkan hanya panel yang dipilih
+        if (staffPanel && internshipPanel) {
+            staffPanel.hidden = !showStaff;
+            internshipPanel.hidden = showStaff;
+
+            staffPanel.classList.toggle('hidden', !showStaff);
+            internshipPanel.classList.toggle('hidden', showStaff);
+        }
     }
+
+    careerTabs.forEach((tab) => {
+        tab.addEventListener('click', () => {
+            showCareerTab(tab.dataset.careerTab);
+        });
+    });
+
+    showCareerTab(
+        document.querySelector('[data-career-tab][aria-selected="true"]')
+            ?.dataset.careerTab || 'staff'
+    );
 });
 
 // HERO SECTION - INDIKATOR KUALITAS KONEKSI

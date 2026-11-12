@@ -357,14 +357,13 @@
 <footer class="bg-[#252f40] text-slate-300">
 
     {{-- FOOTER UTAMA --}}
-    <div class="mx-auto grid max-w-[1400px] grid-cols-1 gap-8 px-6 py-8 sm:grid-cols-2 lg:grid-cols-[2fr_0.9fr_0.9fr_1fr] lg:gap-12 lg:px-10">
-
+    <div class="mx-auto grid max-w-[1280px] grid-cols-1 gap-7 px-6 py-7 sm:grid-cols-2 lg:grid-cols-[1.5fr_0.75fr_0.8fr_1fr] lg:gap-9 lg:px-8">
         {{-- KOLOM 1: PROFIL PERUSAHAAN --}}
         <div>
 
             {{-- LOGO DAN IDENTITAS --}}
             <a href="{{ route('home') }}"
-               class="mb-4 inline-flex items-center gap-3">
+            class="mb-3 inline-flex items-center gap-2.5">
 
                 <img
                     src="{{ asset('images/logo-ewf-transparent.png') }}"
@@ -381,18 +380,17 @@
                         TRILLIUM SURABAYA
                     </small>
                 </span>
-
             </a>
 
             {{-- DESKRIPSI PERUSAHAAN --}}
-            <p class="max-w-[360px] text-[11px] leading-[1.7] text-slate-400">
+            <p class="max-w-[340px] text-[11px] leading-[1.6] text-slate-400">
                 PT Equityworld Futures adalah perusahaan pialang berjangka
                 resmi yang berkomitmen memberikan pelayanan transaksi
                 terbaik dan terpercaya di Indonesia.
             </p>
 
             {{-- MEDIA SOSIAL --}}
-            <div class="mt-4 flex items-center gap-2">
+            <div class="mt-3 flex items-center gap-2">
 
                 {{-- FACEBOOK --}}
                 <a
@@ -456,11 +454,11 @@
         {{-- KOLOM 2: NAVIGASI --}}
         <div>
 
-            <h3 class="mb-4 text-[10px] font-extrabold tracking-wide text-blue-400">
+            <h3 class="mb-3 text-[10px] font-extrabold tracking-wide text-blue-400">
                 NAVIGASI
             </h3>
 
-            <div class="flex flex-col gap-2.5 text-[10px] text-slate-400">
+            <div class="flex flex-col gap-2 text-[10px] text-slate-400">
 
                 <a href="{{ route('home') }}" class="transition hover:text-orange-400">
                     Beranda
@@ -520,7 +518,7 @@
                 KANTOR PUSAT
             </h3>
 
-            <div class="flex flex-col gap-3 text-[10px] leading-[1.6] text-slate-400">
+            <div class="flex flex-col gap-2.5 text-[10px] leading-[1.6] text-slate-400">
 
                 {{-- ALAMAT --}}
                 <div class="flex items-start gap-2">
@@ -573,12 +571,12 @@
     </div>
 
     {{-- GARIS PEMISAH --}}
-    <div class="mx-auto max-w-[1400px] px-6 lg:px-10">
+    <div class="mx-auto max-w-[1280px] px-6 lg:px-8">
         <div class="border-t border-slate-600/30"></div>
     </div>
 
     {{-- PERINGATAN RISIKO --}}
-    <div class="mx-auto max-w-[1400px] px-6 py-4 lg:px-10">
+    <div class="mx-auto max-w-[1280px] px-6 py-3 lg:px-8">
 
         <p class="text-[9px] font-semibold uppercase leading-[1.7] text-slate-300">
 
@@ -601,25 +599,12 @@
     {{-- COPYRIGHT --}}
     <div class="border-t border-slate-600/20">
 
-        <div class="mx-auto flex max-w-[1400px] flex-col justify-between gap-3 px-6 py-4 text-[10px] text-slate-500 sm:flex-row sm:items-center lg:px-10">
+        <div class="mx-auto flex max-w-[1280px] flex-col justify-between gap-2 px-6 py-3 text-[10px] text-slate-500 sm:flex-row sm:items-center lg:px-8">
 
             <p>
                 © {{ date('Y') }} PT Equityworld Futures.
                 Hak Cipta Dilindungi Undang-Undang.
             </p>
-
-            <div class="flex items-center gap-6">
-
-                <a href="#" class="transition hover:text-orange-400">
-                    Kebijakan Privasi
-                </a>
-
-                <a href="#" class="transition hover:text-orange-400">
-                    Syarat &amp; Ketentuan
-                </a>
-
-            </div>
-
         </div>
 
     </div>
