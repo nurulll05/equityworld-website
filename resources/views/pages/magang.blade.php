@@ -20,19 +20,14 @@
                 di PT Equityworld Futures.
             </p>
 
-            @auth
-                <a href="{{ route('magang.form') }}"
-                   class="ewf-inner-button orange">
-                    Daftar Magang →
-                </a>
-            @else
-                <a href="{{ route('login', ['redirect' => 'karier']) }}"
-                   class="ewf-inner-button orange">
-                    Login untuk Daftar Magang →
-                </a>
-            @endauth
+            <a href="#pilihan-divisi"
+               class="ewf-inner-button orange">
+                Pilih Posisi Magang →
+            </a>
+
         </div>
     </section>
+
 
     <!-- TENTANG PROGRAM -->
     <section class="ewf-inner-section">
@@ -81,8 +76,9 @@
         </div>
     </section>
 
+
     <!-- PILIHAN DIVISI -->
-    <section class="ewf-inner-section muted">
+    <section class="ewf-inner-section muted" id="pilihan-divisi">
         <div class="ewf-inner-container">
 
             <div class="ewf-inner-heading">
@@ -98,6 +94,7 @@
 
             <div class="ewf-inner-grid three">
 
+                <!-- DIVISI 1 -->
                 <article class="ewf-inner-card">
                     <span class="ewf-inner-number">01</span>
 
@@ -108,8 +105,22 @@
                         pengelolaan aplikasi, dokumentasi teknis,
                         serta kebutuhan teknologi perusahaan.
                     </p>
+
+                    <a
+                        href="{{ route('applications.create', [
+                            'type' => 'internship',
+                            'position' => 'Magang - Information Technology',
+                            'branch' => 'Cabang Trillium Surabaya'
+                        ]) }}"
+                        class="ewf-inner-button orange"
+                    >
+                        Lamar Posisi Ini →
+                    </a>
+
                 </article>
 
+
+                <!-- DIVISI 2 -->
                 <article class="ewf-inner-card">
                     <span class="ewf-inner-number">02</span>
 
@@ -120,8 +131,22 @@
                         pengolahan data, dan kegiatan administrasi
                         operasional perusahaan.
                     </p>
+
+                    <a
+                        href="{{ route('applications.create', [
+                            'type' => 'internship',
+                            'position' => 'Magang - Administrasi',
+                            'branch' => 'Cabang Trillium Surabaya'
+                        ]) }}"
+                        class="ewf-inner-button orange"
+                    >
+                        Lamar Posisi Ini →
+                    </a>
+
                 </article>
 
+
+                <!-- DIVISI 3 -->
                 <article class="ewf-inner-card">
                     <span class="ewf-inner-number">03</span>
 
@@ -132,6 +157,18 @@
                         bisnis, penyusunan materi promosi, dan aktivitas
                         pendukung pemasaran.
                     </p>
+
+                    <a
+                        href="{{ route('applications.create', [
+                            'type' => 'internship',
+                            'position' => 'Magang - Marketing',
+                            'branch' => 'Cabang Trillium Surabaya'
+                        ]) }}"
+                        class="ewf-inner-button orange"
+                    >
+                        Lamar Posisi Ini →
+                    </a>
+
                 </article>
 
             </div>
@@ -143,6 +180,7 @@
 
         </div>
     </section>
+
 
     <!-- PERSYARATAN -->
     <section class="ewf-inner-section">
@@ -205,6 +243,7 @@
         </div>
     </section>
 
+
     <!-- ALUR PENDAFTARAN -->
     <section class="ewf-inner-section muted">
         <div class="ewf-inner-container">
@@ -225,6 +264,7 @@
                 <article class="ewf-inner-card">
                     <span class="ewf-inner-number">01</span>
                     <h3>Registrasi Akun</h3>
+
                     <p>
                         Buat akun peserta menggunakan email dan password
                         untuk mengakses sistem pendaftaran.
@@ -234,6 +274,7 @@
                 <article class="ewf-inner-card">
                     <span class="ewf-inner-number">02</span>
                     <h3>Login Peserta</h3>
+
                     <p>
                         Masuk melalui halaman login khusus peserta
                         menggunakan akun yang telah dibuat.
@@ -243,6 +284,7 @@
                 <article class="ewf-inner-card">
                     <span class="ewf-inner-number">03</span>
                     <h3>Lengkapi Formulir</h3>
+
                     <p>
                         Isi data mahasiswa, informasi akademik,
                         pilihan divisi, dan periode magang.
@@ -252,6 +294,7 @@
                 <article class="ewf-inner-card">
                     <span class="ewf-inner-number">04</span>
                     <h3>Unggah Dokumen</h3>
+
                     <p>
                         Lengkapi dokumen pendukung sesuai
                         persyaratan program magang.
@@ -261,6 +304,7 @@
                 <article class="ewf-inner-card">
                     <span class="ewf-inner-number">05</span>
                     <h3>Proses Seleksi</h3>
+
                     <p>
                         Admin memeriksa data dan dokumen
                         yang telah dikirimkan peserta.
@@ -270,6 +314,7 @@
                 <article class="ewf-inner-card">
                     <span class="ewf-inner-number">06</span>
                     <h3>Pantau Status</h3>
+
                     <p>
                         Peserta dapat memantau perkembangan
                         permohonan melalui sistem yang tersedia.
@@ -279,6 +324,7 @@
             </div>
         </div>
     </section>
+
 
     <!-- FAQ -->
     <section class="ewf-inner-section">
@@ -322,9 +368,9 @@
                     </summary>
 
                     <p style="margin-top:12px;">
-                        Setelah fitur akun dan pendaftaran terintegrasi,
-                        peserta dapat memantau status melalui sistem
-                        pendaftaran yang disediakan.
+                        Setelah mengirimkan formulir pendaftaran,
+                        peserta dapat memantau status melalui
+                        Dashboard Pelamar.
                     </p>
                 </details>
 
@@ -344,6 +390,7 @@
         </div>
     </section>
 
+
     <!-- CTA -->
     <section class="ewf-inner-cta">
         <div class="ewf-inner-container ewf-inner-cta-row">
@@ -352,22 +399,17 @@
                 <h2>Siap Memulai Pengalaman Magang?</h2>
 
                 <p>
-                    Masuk ke akunmu untuk melanjutkan
-                    proses pendaftaran program magang.
+                    Pilih divisi yang sesuai dengan minat dan kemampuanmu
+                    untuk melanjutkan proses pendaftaran program magang.
                 </p>
             </div>
 
-            @auth
-                <a href="{{ route('magang.form') }}"
-                   class="ewf-inner-button orange">
-                    Daftar Magang →
-                </a>
-            @else
-                <a href="{{ route('login', ['redirect' => 'karier']) }}"
-                   class="ewf-inner-button orange">
-                    Login untuk Daftar →
-                </a>
-            @endauth
+            <a
+                href="#pilihan-divisi"
+                class="ewf-inner-button orange"
+            >
+                Pilih Posisi Magang →
+            </a>
 
         </div>
     </section>

@@ -625,6 +625,9 @@
     </div>
 
 </footer>
-           @stack('scripts')
+@include('auth.popup')
+
+@stack('scripts')
+
 </body>
 </html>
