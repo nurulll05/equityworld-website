@@ -960,9 +960,7 @@ button {
     font-size: 13px;
 }
 
-/* =========================================
-   RESPONSIVE TABLET
-========================================= */
+/* RESPONSIVE TABLET */
 
 @media (max-width: 1000px) {
     .ewf-career-grid {
@@ -975,9 +973,7 @@ button {
     }
 }
 
-/* =========================================
-   RESPONSIVE HP
-========================================= */
+/* RESPONSIVE HP */
 
 @media (max-width: 640px) {
     .ewf-career-section {
@@ -1267,9 +1263,7 @@ button {
     color: #b94f00;
 }
 
-/* ==========================================
-   FOOTER WEBSITE
-========================================== */
+/* FOOTER WEBSITE */
 
 .site-footer {
     padding: 35px 0 0;
@@ -1425,9 +1419,7 @@ button {
     color: #ff8a2c;
 }
 
-/* ==========================================
-   RESPONSIVE TABLET
-========================================== */
+/* RESPONSIVE TABLET */
 
 @media (max-width: 900px) {
     .ewf-news-grid {
@@ -1532,10 +1524,7 @@ button {
     }
 }
 
-
-/* =========================================
-   HOMEPAGE - PENYESUAIAN DESAIN
-========================================= */
+/* HOMEPAGE - PENYESUAIAN DESAIN */
 
 /* LOGO NAVBAR DAN FOOTER */
 .brand-logo {
@@ -1768,9 +1757,7 @@ button {
     }
 }
 
-/* =========================================
-   NAVBAR PUBLIK - DESAIN KAPSUL NAVY
-========================================= */
+/* NAVBAR PUBLIK - DESAIN KAPSUL NAVY */
 
 .site-header {
     position: sticky;
@@ -1856,4 +1843,65 @@ html,
 body {
     max-width: 100%;
     overflow-x: clip;
+}
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Admin Sidebar */
+@layer components {
+    .sidebar-link {
+        @apply mb-1 flex items-center gap-3 rounded-lg px-3 py-2.5
+        text-xs text-slate-300 transition duration-200;
+    }
+
+    .sidebar-link:hover {
+        @apply bg-slate-800 text-white;
+    }
+
+    .sidebar-link.active {
+        @apply bg-orange-500 font-semibold text-white shadow-md;
+    }
+}
+
+/* SIDEBAR ADMIN */
+#adminSidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+}
+
+#adminSidebar.is-open {
+    transform: translateX(0);
+}
+
+/* Desktop */
+@media (min-width: 768px) {
+    #adminSidebar {
+        transform: translateX(0);
+    }
+
+    #adminSidebar.is-closed {
+        transform: translateX(-100%);
+    }
+
+    #adminMain {
+        margin-left: 260px;
+        transition: margin-left 0.3s ease;
+    }
+
+    #adminMain.is-expanded {
+        margin-left: 0;
+    }
+}
+
+/* Sembunyikan scrollbar sidebar */
+.admin-sidebar-nav {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.admin-sidebar-nav::-webkit-scrollbar {
+    display: none;
 }

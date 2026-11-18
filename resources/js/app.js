@@ -1,4 +1,5 @@
 import './bootstrap';
+import './admin/visual-editor';
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -302,3 +303,50 @@ function initConnectionIndicator() {
 }
 
 document.addEventListener('DOMContentLoaded', initConnectionIndicator);
+
+document.addEventListener('DOMContentLoaded', function () {
+    const sidebar = document.getElementById('adminSidebar');
+    const main = document.getElementById('adminMain');
+    const overlay = document.getElementById('sidebarOverlay');
+    const toggleButton = document.getElementById('sidebarToggle');
+
+    if (!sidebar || !main || !overlay || !toggleButton) return;
+
+    function toggleAdminSidebar() {
+        const isDesktop = window.innerWidth >= 768;
+
+        if (isDesktop) {
+            // Buka/tutup sidebar desktop
+            const isClosed = sidebar.classList.toggle('is-closed');
+
+            main.classList.toggle('is-expanded', isClosed);
+        } else {
+            // Buka/tutup sidebar mobile
+            const isOpen = sidebar.classList.toggle('is-open');
+
+            overlay.classList.toggle('hidden', !isOpen);
+        }
+
+        toggleButton.setAttribute(
+            'aria-expanded',
+            isDesktop
+                ? String(!sidebar.classList.contains('is-closed'))
+                : String(sidebar.classList.contains('is-open'))
+        );
+    }
+
+    toggleButton.addEventListener('click', toggleAdminSidebar);
+
+    overlay.addEventListener('click', function () {
+        sidebar.classList.remove('is-open');
+        overlay.classList.add('hidden');
+        toggleButton.setAttribute('aria-expanded', 'false');
+    });
+
+    window.addEventListener('resize', function () {
+        sidebar.classList.remove('is-open', 'is-closed');
+        main.classList.remove('is-expanded');
+        overlay.classList.add('hidden');
+        toggleButton.setAttribute('aria-expanded', 'true');
+    });
+});

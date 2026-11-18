@@ -8,15 +8,25 @@
 
 <div class="ewf-home">
 
+@php
+    // GAMBAR HERO
+    $heroImage = data_get($cmsContent ?? [], 'home.hero.image', []);
+
+    $heroImageSrc = $heroImage['src'] ?? asset('images/gedung.jpeg');
+    $heroImageAlt = $heroImage['alt'] ?? 'Gedung PT Equityworld Futures';
+@endphp
+
 {{-- HERO SECTION --}}
 <section class="relative isolate flex min-h-[540px] items-center overflow-hidden bg-[#08132d] py-10 lg:min-h-[560px] lg:py-12">
 
     {{-- BACKGROUND GEDUNG SISI KANAN --}}
     <img
-        src="{{ asset('images/gedung.jpeg') }}"
-        alt=""
+        src="{{ $heroImageSrc }}"
+        alt="{{ $heroImageAlt }}"
         aria-hidden="true"
         class="pointer-events-none absolute right-0 top-0 -z-20 h-full w-full object-cover object-right opacity-80 lg:w-[75%]"
+        data-cms-editable="home.hero.image"
+        data-cms-type="image"
     >
 
     {{-- GRADIENT MENYATUKAN GEDUNG DENGAN NAVY --}}
@@ -27,8 +37,7 @@
     {{-- AKSEN CAHAYA --}}
     <div class="pointer-events-none absolute -right-32 bottom-0 -z-10 h-80 w-80 rounded-full bg-orange-500/10 blur-[100px]"></div>
 
-    <div class="mx-auto grid w-full max-w-[1540px] grid-cols-1 items-center gap-9 px-6 md:px-10 lg:grid-cols-[1.15fr_0.85fr] lg:gap-10 lg:px-14">
-
+    <div class="mx-auto grid w-full max-w-[1540px] grid-cols-1 items-center gap-9 px-6 md:grid-cols-[minmax(0,1.15fr)_minmax(360px,0.85fr)] md:gap-8 md:px-10 lg:gap-10 lg:px-14">
         {{-- KONTEN KIRI --}}
         <div class="relative z-10 text-white">
 
@@ -45,39 +54,133 @@
                 PERUSAHAAN PERDAGANGAN BERJANGKA TERPERCAYA
 
             </span>
-
+          
             {{-- JUDUL --}}
-            <h1 class="max-w-3xl font-['Manrope'] text-4xl font-extrabold leading-[1.1] tracking-tight sm:text-5xl lg:text-[48px] xl:text-[54px]">
+            @php
+                $heroCms = data_get($cmsContent ?? [], 'home.hero', []);
 
-                Membangun Masa
-                <br>
-                Depan Finansial
-                <br>
-                Bersama <span class="text-orange-500">Equityworld</span>
+                $heroSegments = $heroCms['segments'] ?? [
+                    [
+                        'text' => 'Membangun Masa',
+                        'color' => '#FFFFFF',
+                        'line_break_after' => true,
+                    ],
+                    [
+                        'text' => 'Depan Finansial',
+                        'color' => '#FFFFFF',
+                        'line_break_after' => true,
+                    ],
+                    [
+                        'text' => 'Bersama',
+                        'color' => '#FFFFFF',
+                        'line_break_after' => false,
+                    ],
+                    [
+                        'text' => 'Equityworld',
+                        'color' => '#F97316',
+                        'line_break_after' => false,
+                    ],
+                ];
 
+                $heroFont = $heroCms['font'] ?? 'Manrope';
+                $heroSize = $heroCms['size'] ?? 54;
+                $heroWeight = $heroCms['weight'] ?? 800;
+
+                // DESKRIPSI HERO
+                $heroDescription = data_get($cmsContent ?? [], 'home.hero.description', []);
+
+                $descriptionText = $heroDescription['content']
+                    ?? 'Penyedia layanan transaksi perdagangan berjangka profesional dan transparan di Indonesia. Didukung oleh regulasi resmi dan tenaga ahli berpengalaman.';
+
+                $descriptionColor = $heroDescription['color'] ?? '#DBEAFE';
+                $descriptionFont = $heroDescription['font'] ?? 'DM Sans';
+                $descriptionSize = $heroDescription['size'] ?? 15;
+                $descriptionWeight = $heroDescription['weight'] ?? 400;
+                $descriptionAlign = $heroDescription['align'] ?? 'left';
+
+                // TOMBOL HERO
+                $heroButton = data_get($cmsContent ?? [], 'home.hero.button', []);
+
+                $heroButtonLabel = $heroButton['label'] ?? 'Tentang Perusahaan';
+                $heroButtonUrl = $heroButton['url'] ?? route('about');
+                $heroButtonBackground = $heroButton['background_color'] ?? '#2563EB';
+                $heroButtonTextColor = $heroButton['text_color'] ?? '#FFFFFF';
+
+                // TOMBOL KARIER & MAGANG
+                $careerButton = data_get($cmsContent ?? [], 'home.hero.career_button', []);
+
+                $careerButtonLabel = $careerButton['label'] ?? 'Gabung Karier & Magang';
+                $careerButtonUrl = $careerButton['url'] ?? route('careers');
+                $careerButtonBackground = $careerButton['background_color'] ?? '#F97316';
+                $careerButtonTextColor = $careerButton['text_color'] ?? '#FFFFFF';
+            @endphp
+
+            
+
+            <h1
+                class="max-w-3xl leading-[1.1] tracking-tight text-4xl sm:text-5xl lg:text-[48px] xl:text-[54px]"
+                style="
+                    font-family: '{{ $heroFont }}', sans-serif;
+                    font-size: {{ (int) $heroSize }}px;
+                    font-weight: {{ (int) $heroWeight }};
+                "
+                @if($isVisualEditor ?? false)
+                    data-cms-editable="home.hero.title"
+                    data-cms-label="Judul Utama"
+                @endif
+            >
+
+                @foreach($heroSegments as $segment)
+                    <span style="color: {{ $segment['color'] ?? '#FFFFFF' }}">
+                        {{ $segment['text'] ?? '' }}
+                    </span>
+                    @if(!empty($segment['line_break_after']))
+                        <br>
+                    @endif
+                @endforeach
             </h1>
 
             {{-- DESKRIPSI --}}
-            <p class="mt-5 max-w-xl text-sm leading-7 text-blue-100 sm:text-[15px]">
-                Penyedia layanan transaksi perdagangan berjangka
-                profesional dan transparan di Indonesia. Didukung
-                oleh regulasi resmi dan tenaga ahli berpengalaman.
+            <p
+                class="mt-5 max-w-xl text-sm leading-7 sm:text-[15px]"
+                style="
+                    color: {{ $descriptionColor }};
+                    font-family: '{{ $descriptionFont }}', sans-serif;
+                    font-size: {{ (int) $descriptionSize }}px;
+                    font-weight: {{ (int) $descriptionWeight }};
+                    text-align: {{ $descriptionAlign }};
+                "
+                data-cms-editable="home.hero.description"
+                data-cms-type="text"
+                data-cms-label="Deskripsi Hero"
+            >
+                {{ $descriptionText }}
             </p>
 
             {{-- TOMBOL --}}
-            <div class="mt-6 flex flex-wrap gap-3">
+            <div class="mt-6 flex items-center gap-3">
 
                 <a
-                    href="{{ route('about') }}"
-                    class="inline-flex items-center gap-3 rounded-lg bg-blue-600 px-5 py-3 text-xs font-bold text-white shadow-lg shadow-blue-600/20 transition duration-300 hover:-translate-y-1 hover:bg-blue-500 sm:px-6 sm:py-3.5 sm:text-sm"
+                    href="{{ $heroButtonUrl }}"
+                    class="inline-flex items-center gap-3 whitespace-nowrap rounded-lg px-5 py-3 text-xs font-bold shadow-lg transition duration-300 hover:-translate-y-1 sm:px-6 sm:py-3.5 sm:text-sm"
+                    style="
+                        background-color: {{ $heroButtonBackground }};
+                        color: {{ $heroButtonTextColor }};
+                    "
+                    data-cms-editable="home.hero.button"
+                    data-cms-type="button"
+                    data-cms-label="Tombol Tentang Perusahaan"
                 >
-                    Tentang Perusahaan
+                    {{ $heroButtonLabel }}
                     <span aria-hidden="true">→</span>
                 </a>
 
                 <a
                     href="{{ route('careers') }}"
                     class="inline-flex items-center gap-3 rounded-lg bg-orange-500 px-5 py-3 text-xs font-bold text-white shadow-lg shadow-orange-500/20 transition duration-300 hover:-translate-y-1 hover:bg-orange-400 sm:px-6 sm:py-3.5 sm:text-sm"
+                    data-cms-editable="home.hero.career_button"
+                    data-cms-type="button"
+                    data-cms-label="Tombol Gabung Karier & Magang"
                 >
                     <svg
                         class="h-4 w-4 shrink-0"
@@ -97,6 +200,7 @@
 
                     Gabung Karier &amp; Magang
                 </a>
+
             </div>
 
             {{-- STATISTIK --}}

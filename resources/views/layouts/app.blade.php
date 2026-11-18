@@ -29,7 +29,12 @@
     @stack('styles')
 </head>
 
-<body class="font-['DM_Sans']">
+<body
+    class="font-['DM_Sans']"
+    data-visual-editor="{{ ($isVisualEditor ?? false) ? 'true' : 'false' }}"
+    data-cms-save-url="{{ route('admin.website.save') }}"
+    data-csrf="{{ csrf_token() }}"
+>
 <header class="site-header sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur-xl">    
     <div class="relative mx-auto flex min-h-[76px] w-full max-w-[1400px] items-center justify-between gap-4 px-5 py-3 box-border min-[1200px]:min-h-[82px] min-[1200px]:gap-5 min-[1200px]:px-10">
 

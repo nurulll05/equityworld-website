@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\NewsService;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
 class HomeController extends Controller
@@ -35,6 +36,16 @@ class HomeController extends Controller
             })
             ->values();
 
-        return view('pages.home', compact('news'));
+        // Membaca konten CMS yang disimpan Admin
+        $cmsPath = storage_path('app/cms/website.json');
+
+        $cmsContent = File::exists($cmsPath)
+            ? json_decode(File::get($cmsPath), true) ?? []
+            : [];
+
+        return view('pages.home', [
+            'news' => $news,
+            'cmsContent' => $cmsContent,
+        ]);
     }
 }
