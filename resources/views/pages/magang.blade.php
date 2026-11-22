@@ -107,7 +107,7 @@
                     </p>
 
                     <a
-                        href="{{ route('applications.create', [
+                         href="{{ route('form.magang', [
                             'type' => 'internship',
                             'position' => 'Magang - Information Technology',
                             'branch' => 'Cabang Trillium Surabaya'
@@ -133,7 +133,7 @@
                     </p>
 
                     <a
-                        href="{{ route('applications.create', [
+                         href="{{ route('form.magang', [
                             'type' => 'internship',
                             'position' => 'Magang - Administrasi',
                             'branch' => 'Cabang Trillium Surabaya'
@@ -159,7 +159,7 @@
                     </p>
 
                     <a
-                        href="{{ route('applications.create', [
+                        href="{{ route('form.magang')
                             'type' => 'internship',
                             'position' => 'Magang - Marketing',
                             'branch' => 'Cabang Trillium Surabaya'

@@ -1,737 +1,722 @@
 
-@extends('layouts.applicant')
+@extends('layouts.app')
 
-@section('title', 'Formulir Lamaran | PT Equityworld Futures')
+@section('title', 'Akun Saya | PT Equityworld Futures')
 
 @section('content')
 
-<div class="mx-auto max-w-[1120px] px-3 py-6 sm:px-5 lg:px-7">
+@php
+    $activeTab = request('tab', 'profil');
+    $editMode = request('mode') === 'edit';
+    $user = auth()->user();
+@endphp
 
-    {{-- ==========================================
-         PILIHAN PROGRAM
-    =========================================== --}}
+<div class="min-h-[600px] bg-slate-50/70">
+    <div class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
 
-    <div class="mb-5 flex justify-center">
-
-        <div class="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-white p-1 shadow-sm">
-
-            <button
-                type="button"
-                data-program="staff_full_time"
-                class="program-button rounded-full bg-orange-500 px-5 py-2.5 text-[10px] font-bold text-white shadow-sm transition sm:px-7"
-            >
-
-                <span class="mr-1">▣</span>
-                Staff Kantor (Full-Time)
-
-            </button>
-
-            <button
-                type="button"
-                data-program="internship"
-                class="program-button rounded-full px-5 py-2.5 text-[10px] font-bold text-slate-600 transition hover:bg-slate-100 sm:px-7"
-            >
-
-                <span class="mr-1">▤</span>
-                Program Magang (Internship)
-
-            </button>
-
-        </div>
-
-    </div>
-
-
-    {{-- ==========================================
-         FORMULIR LAMARAN
-    =========================================== --}}
-
-    <div class="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
-
-        {{-- HEADER FORMULIR --}}
-
-        <div class="border-b border-slate-100 bg-[#F2F5FC] px-5 py-5 sm:px-7">
-
-            <div class="mb-2 flex flex-wrap items-center gap-2">
-
-                <span class="rounded-sm bg-[#102B4A] px-2 py-1 text-[9px] font-bold tracking-wide text-white">
-                    STAFF KANTOR (FULL-TIME)
-                </span>
-
-                <span class="rounded-sm bg-blue-100 px-2 py-1 text-[9px] font-semibold text-blue-800">
-                    ▣ Cabang Trillium Surabaya
-                </span>
-
+        {{-- HEADER --}}
+        <div class="mb-8">
+            <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-orange-500">
+                <span class="h-1.5 w-1.5 rounded-full bg-orange-500"></span>
+                Portal Karier
             </div>
 
-            <h1 class="text-lg font-extrabold text-[#142943] sm:text-xl">
-                Formulir Lamaran
-            </h1>
+            <div class="mt-3 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
+                <div>
+                    <h1 class="text-3xl font-extrabold tracking-tight text-[#102B4A]">
+                        Akun Saya
+                    </h1>
+                    <p class="mt-2 text-sm text-slate-500">
+                        Kelola profil dan pantau perjalanan lamaran Anda.
+                    </p>
+                </div>
 
-            <p class="mt-1 max-w-2xl text-[11px] leading-5 text-slate-500">
-                Lengkapi data diri dan berkas utama Anda untuk proses peninjauan oleh tim Human Capital PT. Equityworld Futures Cabang Trillium Surabaya.
-            </p>
-
+                <div class="text-xs font-medium text-slate-400">
+                    PT Equityworld Futures
+                </div>
+            </div>
         </div>
 
+        {{-- TAB NAVIGATION --}}
+        <div class="mb-6 inline-flex w-full gap-1 rounded-xl border border-slate-200 bg-white p-1.5 shadow-sm sm:w-auto">
 
-        {{-- PESAN NOTIFIKASI --}}
+            <a href="{{ route('pelamar.dashboard', ['tab' => 'profil']) }}"
+                class="{{ $activeTab === 'profil' ? 'bg-[#102B4A] text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-[#102B4A]' }} flex flex-1 items-center justify-center gap-2 rounded-lg px-5 py-3 text-sm font-bold transition sm:flex-none">
 
-        <div class="px-5 pt-4 sm:px-7">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path d="M20 21a8 8 0 0 0-16 0m8-10a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" stroke-width="1.8" stroke-linecap="round"/>
+                </svg>
 
-            @if(session('success'))
+                Profil Saya
+            </a>
 
-                <div class="mb-3 rounded-md border border-green-200 bg-green-50 px-4 py-3 text-xs text-green-700">
-                    {{ session('success') }}
-                </div>
+            <a href="{{ route('pelamar.dashboard', ['tab' => 'lamaran']) }}"
+                class="{{ $activeTab === 'lamaran' ? 'bg-[#102B4A] text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50 hover:text-[#102B4A]' }} flex flex-1 items-center justify-center gap-2 rounded-lg px-5 py-3 text-sm font-bold transition sm:flex-none">
 
-            @endif
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path d="M8 7V3m8 4V3M4 11h16M5 5h14a1 1 0 0 1 1 1v14H4V6a1 1 0 0 1 1-1Z" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
 
-            @if($errors->any())
-
-                <div class="mb-3 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-xs text-red-700">
-
-                    <p class="mb-1 font-bold">
-                        Terdapat data yang belum sesuai:
-                    </p>
-
-                    <ul class="list-inside list-disc space-y-1">
-
-                        @foreach($errors->all() as $error)
-
-                            <li>{{ $error }}</li>
-
-                        @endforeach
-
-                    </ul>
-
-                </div>
-
-            @endif
-
+                Status Lamaran
+            </a>
         </div>
 
+        {{-- TAB PROFIL --}}
+        @if ($activeTab === 'profil')
 
-        {{-- FORM DATA --}}
+            <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
 
-        <form
-            action="{{ route('applications.store') }}"
-            method="POST"
-            enctype="multipart/form-data"
-            class="px-5 pb-5 sm:px-7"
-        >
+                {{-- PROFILE HERO --}}
+                <div class="relative overflow-hidden bg-[#102B4A] px-6 py-8 sm:px-8">
+                    <div class="absolute -right-10 -top-16 h-52 w-52 rounded-full border-[25px] border-white/5"></div>
+                    <div class="absolute -bottom-24 right-36 h-48 w-48 rounded-full bg-orange-500/10"></div>
 
-            @csrf
+                    <div class="relative flex flex-col gap-5 sm:flex-row sm:items-center">
 
-            <input
-                type="hidden"
-                name="application_type"
-                id="applicationType"
-                value="{{ old('application_type', 'staff_full_time') }}"
-            >
+                        <div class="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl border-2 border-white/20 bg-white/10 text-3xl font-extrabold text-white shadow-lg">
+                            {{ strtoupper(substr($user->name, 0, 1)) }}
+                        </div>
 
+                        <div class="min-w-0">
+                            <p class="text-xs font-semibold uppercase tracking-widest text-orange-300">
+                                Profil Pelamar
+                            </p>
 
-            {{-- ==========================================
-                 1. DATA DIRI PELAMAR
-            =========================================== --}}
+                            <h2 class="mt-2 break-words text-2xl font-extrabold text-white">
+                                {{ $user->name }}
+                            </h2>
 
-            <section class="border-b border-slate-100 py-4">
+                            <p class="mt-1 break-all text-sm text-blue-100">
+                                {{ $user->email }}
+                            </p>
+                        </div>
 
-                <div class="mb-3">
+                        <div class="sm:ml-auto">
+                            <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-2 text-xs font-semibold text-white">
+                                <span class="h-2 w-2 rounded-full bg-emerald-400"></span>
+                                Akun Aktif
+                            </span>
+                        </div>
 
-                    <h2 class="text-xs font-extrabold text-[#142943]">
-                        <span class="mr-1 text-orange-500">①</span>
-                        1. Data Diri Pelamar
-                    </h2>
+                    </div>
+                </div>
+                
+                {{-- PROFILE DETAILS --}}
+                <div class="p-6 sm:p-8">
 
-                    <p class="mt-1 text-[10px] text-slate-500">
-                        Pastikan kontak aktif agar jadwal interview dapat dikirim via WhatsApp.
-                    </p>
+                    {{-- NOTIFIKASI --}}
+                    @if (session('success'))
+                        <div class="mb-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
+                    @if ($errors->any())
+                        <div class="mb-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                            <p class="mb-1 font-bold">Periksa kembali data Anda:</p>
+                            <ul class="list-inside list-disc">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+                    @if (!$editMode)
+
+                        {{-- MODE LIHAT PROFIL --}}
+                        <div class="mb-6 flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
+                            <div>
+                                <h3 class="text-base font-extrabold text-[#102B4A]">
+                                    Informasi Pribadi
+                                </h3>
+                                <p class="mt-1 text-sm text-slate-500">
+                                    Informasi dasar yang terdaftar pada akun Anda.
+                                </p>
+                            </div>
+
+                            <a href="{{ route('pelamar.dashboard', ['tab' => 'profil', 'mode' => 'edit']) }}"
+                                class="inline-flex items-center justify-center gap-2 rounded-lg bg-[#102B4A] px-5 py-3 text-sm font-bold text-white transition hover:bg-orange-500">
+
+                                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path d="m16 4 4 4M4 20l4-.8L19 8a2.8 2.8 0 0 0-4-4L4 15v5Z"
+                                        stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+
+                                Edit Profil
+                            </a>
+                        </div>
+
+                        <div class="grid gap-4 sm:grid-cols-2">
+
+                            <div class="rounded-xl border border-slate-100 bg-slate-50/80 p-5">
+                                <p class="text-xs text-slate-500">Nama Lengkap</p>
+                                <p class="mt-2 break-words text-sm font-bold text-[#102B4A]">
+                                    {{ $user->name }}
+                                </p>
+                            </div>
+
+                            <div class="rounded-xl border border-slate-100 bg-slate-50/80 p-5">
+                                <p class="text-xs text-slate-500">Alamat Email</p>
+                                <p class="mt-2 break-all text-sm font-bold text-[#102B4A]">
+                                    {{ $user->email }}
+                                </p>
+                            </div>
+
+                            <div class="rounded-xl border border-slate-100 bg-slate-50/80 p-5">
+                                <p class="text-xs text-slate-500">Nomor WhatsApp</p>
+                                <p class="mt-2 text-sm font-bold text-[#102B4A]">
+                                    {{ $user->phone ?? '-' }}
+                                </p>
+                            </div>
+
+                            <div class="rounded-xl border border-slate-100 bg-slate-50/80 p-5">
+                                <p class="text-xs text-slate-500">Jenis Akun</p>
+                                <p class="mt-2 text-sm font-bold text-[#102B4A]">
+                                    Pelamar
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <div class="mt-6 rounded-xl border border-orange-100 bg-orange-50/60 p-4">
+                            <div class="flex items-start gap-3">
+                                <span class="text-lg">ℹ️</span>
+                                <p class="text-xs leading-relaxed text-slate-600">
+                                    Pastikan informasi akun Anda selalu benar dan dapat dihubungi untuk memudahkan proses komunikasi selama seleksi.
+                                </p>
+                            </div>
+                        </div>
+
+                    @else
+
+                        {{-- MODE EDIT PROFIL --}}
+                        <div class="mb-6">
+                            <h3 class="text-base font-extrabold text-[#102B4A]">
+                                Edit Informasi Profil
+                            </h3>
+                            <p class="mt-1 text-sm text-slate-500">
+                                Perbarui informasi pribadi Anda melalui formulir berikut.
+                            </p>
+                        </div>
+
+                        <form action="{{ route('pelamar.profile.update') }}" method="POST">
+                            @csrf
+                            @method('PUT')
+
+                            <div class="grid gap-5 sm:grid-cols-2">
+
+                                <div>
+                                    <label for="name" class="mb-2 block text-sm font-semibold text-slate-700">
+                                        Nama Lengkap
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="name"
+                                        name="name"
+                                        value="{{ old('name', $user->name) }}"
+                                        required
+                                        maxlength="255"
+                                        class="block w-full rounded-xl border-2 border-solid border-slate-300 bg-white px-4 py-3 text-sm text-slate-800 shadow-none outline-none ring-0 transition focus:border-orange-400 focus:ring-0"
+                                    >
+                                    @error('name')
+                                        <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                                <div>
+                                    <label for="email" class="mb-2 block text-sm font-semibold text-slate-700">
+                                        Alamat Email
+                                    </label>
+                                    <input
+                                        type="email"
+                                        id="email"
+                                        name="email"
+                                        value="{{ old('email', $user->email) }}"
+                                        required
+                                        maxlength="255"
+                                        class="block w-full rounded-xl border-2 border-solid border-slate-300 bg-white px-4 py-3 text-sm text-slate-800 shadow-none outline-none ring-0 transition focus:border-orange-400 focus:ring-0"
+                                    >
+                                    @error('email')
+                                        <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                                <div class="sm:col-span-2">
+                                    <label for="phone" class="mb-2 block text-sm font-semibold text-slate-700">
+                                        Nomor WhatsApp
+                                    </label>
+                                    <input
+                                        type="tel"
+                                        id="phone"
+                                        name="phone"
+                                        value="{{ old('phone', $user->phone) }}"
+                                        required
+                                        maxlength="20"
+                                        class="block w-full rounded-xl border-2 border-solid border-slate-300 bg-white px-4 py-3 text-sm text-slate-800 shadow-none outline-none ring-0 transition focus:border-orange-400 focus:ring-0"
+                                    >
+                                    @error('phone')
+                                        <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                            </div>
+
+                            <div class="mt-8 flex flex-col-reverse gap-3 border-t border-slate-100 pt-6 sm:flex-row sm:justify-end">
+
+                                <a href="{{ route('pelamar.dashboard', ['tab' => 'profil']) }}"
+                                    class="rounded-lg border border-slate-200 px-5 py-3 text-center text-sm font-bold text-slate-600 transition hover:bg-slate-50">
+                                    Batal
+                                </a>
+
+                                <button type="submit"
+                                    class="inline-flex items-center justify-center rounded-lg border border-[#102B4A] bg-[#102B4A] px-6 py-3 text-sm font-bold text-white shadow-none outline-none transition hover:border-orange-500 hover:bg-orange-500 focus:ring-2 focus:ring-orange-200">
+                                    Simpan Perubahan
+                                </button>
+
+                            </div>
+                        </form>
+
+                    @endif
 
                 </div>
-
-
-                <div class="grid grid-cols-1 gap-x-5 gap-y-3 sm:grid-cols-2">
-
-                    {{-- NAMA --}}
-
-                    <div>
-
-                        <label class="mb-1 block text-[10px] font-bold text-[#142943]">
-                            Nama Lengkap Sesuai KTP *
-                        </label>
-
-                        <input
-                            type="text"
-                            name="name"
-                            value="{{ old('name', $user->name) }}"
-                            required
-                            placeholder="Masukkan nama lengkap"
-                            class="h-9 w-full rounded border border-slate-200 bg-[#F0F3FB] px-3 text-[10px] text-slate-700 outline-none transition focus:border-orange-400 focus:bg-white"
-                        >
-
-                    </div>
-
-
-                    {{-- WHATSAPP --}}
-
-                    <div>
-
-                        <label class="mb-1 block text-[10px] font-bold text-[#142943]">
-                            Nomor WhatsApp / HP Aktif *
-                        </label>
-
-                        <input
-                            type="tel"
-                            name="phone"
-                            value="{{ old('phone', $user->phone) }}"
-                            required
-                            placeholder="Contoh: 081234567890"
-                            class="h-9 w-full rounded border border-slate-200 bg-[#F0F3FB] px-3 text-[10px] text-slate-700 outline-none transition focus:border-orange-400 focus:bg-white"
-                        >
-
-                    </div>
-
-
-                    {{-- EMAIL --}}
-
-                    <div>
-
-                        <label class="mb-1 block text-[10px] font-bold text-[#142943]">
-                            Alamat Email Aktif *
-                        </label>
-
-                        <input
-                            type="email"
-                            name="email"
-                            value="{{ old('email', $user->email) }}"
-                            required
-                            placeholder="nama@email.com"
-                            class="h-9 w-full rounded border border-slate-200 bg-[#F0F3FB] px-3 text-[10px] text-slate-700 outline-none transition focus:border-orange-400 focus:bg-white"
-                        >
-
-                    </div>
-
-
-                    {{-- DOMISILI --}}
-
-                    <div>
-
-                        <label class="mb-1 block text-[10px] font-bold text-[#142943]">
-                            Kota Domisili Saat Ini *
-                        </label>
-
-                        <input
-                            type="text"
-                            name="domicile"
-                            value="{{ old('domicile') }}"
-                            required
-                            placeholder="Contoh: Surabaya"
-                            class="h-9 w-full rounded border border-slate-200 bg-[#F0F3FB] px-3 text-[10px] text-slate-700 outline-none transition focus:border-orange-400 focus:bg-white"
-                        >
-
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            {{-- ==========================================
-                 2. POSISI DAN FORMASI
-            =========================================== --}}
-
-            <section class="border-b border-slate-100 py-4">
-
-                <div class="mb-3">
-
-                    <h2 class="text-xs font-extrabold text-[#142943]">
-                        <span class="mr-1 text-orange-500">②</span>
-                        2. Posisi & Formasi Jabatan
-                    </h2>
-
-                    <p class="mt-1 text-[10px] text-slate-500">
-                        Pilih posisi dan tentukan tipe penempatan kerja di kantor Cabang Trillium Surabaya.
-                    </p>
-
-                </div>
-
-
-                <div class="grid grid-cols-1 gap-x-5 gap-y-3 sm:grid-cols-2">
-
-                    <div>
-
-                        <label class="mb-1 block text-[10px] font-bold text-[#142943]">
-                            Posisi yang Dilamar *
-                        </label>
-
-                        <input
-                            type="text"
-                            name="position"
-                            value="{{ old('position') }}"
-                            required
-                            placeholder="Masukkan posisi yang dilamar"
-                            class="h-9 w-full rounded border border-slate-200 bg-[#F0F3FB] px-3 text-[10px] text-slate-700 outline-none transition focus:border-orange-400 focus:bg-white"
-                        >
-
-                    </div>
-
-
-                    <div>
-
-                        <label class="mb-1 block text-[10px] font-bold text-[#142943]">
-                            Ketersediaan Mulai Bergabung *
-                        </label>
-
-                        <select
-                            name="availability"
-                            required
-                            class="h-9 w-full rounded border border-slate-200 bg-[#F0F3FB] px-3 text-[10px] text-slate-700 outline-none transition focus:border-orange-400 focus:bg-white"
-                        >
-
-                            <option value="">Pilih ketersediaan</option>
-
-                            <option value="Secepatnya" {{ old('availability') == 'Secepatnya' ? 'selected' : '' }}>
-                                Secepatnya / Segera
-                            </option>
-
-                            <option value="1-2 minggu" {{ old('availability') == '1-2 minggu' ? 'selected' : '' }}>
-                                Dalam 1-2 Minggu
-                            </option>
-
-                            <option value="1 bulan" {{ old('availability') == '1 bulan' ? 'selected' : '' }}>
-                                Dalam 1 Bulan
-                            </option>
-
-                            <option value="Lebih dari 1 bulan" {{ old('availability') == 'Lebih dari 1 bulan' ? 'selected' : '' }}>
-                                Lebih dari 1 Bulan
-                            </option>
-
-                        </select>
-
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            {{-- ==========================================
-                 3. PENDIDIKAN DAN PENGALAMAN
-            =========================================== --}}
-
-            <section class="border-b border-slate-100 py-4">
-
-                <div class="mb-3">
-
-                    <h2 class="text-xs font-extrabold text-[#142943]">
-                        <span class="mr-1 text-orange-500">③</span>
-                        3. Pendidikan & Pengalaman
-                    </h2>
-
-                </div>
-
-
-                <div class="grid grid-cols-1 gap-x-5 gap-y-3 sm:grid-cols-2">
-
-                    <div>
-
-                        <label class="mb-1 block text-[10px] font-bold text-[#142943]">
-                            Pendidikan Terakhir *
-                        </label>
-
-                        <select
-                            name="education"
-                            required
-                            class="h-9 w-full rounded border border-slate-200 bg-[#F0F3FB] px-3 text-[10px] text-slate-700 outline-none transition focus:border-orange-400 focus:bg-white"
-                        >
-
-                            <option value="">Pilih pendidikan terakhir</option>
-
-                            @foreach(['SMA / SMK','D1','D2','D3','D4','S1','S2','S3'] as $education)
-
-                                <option value="{{ $education }}"
-                                    {{ old('education') == $education ? 'selected' : '' }}>
-                                    {{ $education }}
-                                </option>
-
-                            @endforeach
-
-                        </select>
-
-                    </div>
-
-
-                    <div>
-
-                        <label class="mb-1 block text-[10px] font-bold text-[#142943]">
-                            Nama Kampus / Universitas *
-                        </label>
-
-                        <input
-                            type="text"
-                            name="university"
-                            value="{{ old('university') }}"
-                            required
-                            placeholder="Masukkan nama institusi pendidikan"
-                            class="h-9 w-full rounded border border-slate-200 bg-[#F0F3FB] px-3 text-[10px] text-slate-700 outline-none transition focus:border-orange-400 focus:bg-white"
-                        >
-
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            {{-- ==========================================
-                 4. KELENGKAPAN BERKAS
-            =========================================== --}}
-
-            <section class="py-4">
-
-                <div class="mb-3">
-
-                    <h2 class="text-xs font-extrabold text-[#142943]">
-                        <span class="mr-1 text-orange-500">④</span>
-                        4. Kelengkapan Berkas (Digital)
-                    </h2>
-
-                    <p class="mt-1 text-[10px] text-slate-500">
-                        Format PDF atau JPG/PNG maksimal 5MB per file.
-                    </p>
-
-                </div>
-
-
-                <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
-
-                    {{-- CV --}}
-
-                    <div>
-
-                        <label
-                            for="cv"
-                            class="flex min-h-[90px] cursor-pointer flex-col items-center justify-center rounded border border-slate-200 bg-[#F5F7FC] p-3 text-center transition hover:border-orange-300 hover:bg-orange-50"
-                        >
-
-                            <svg class="mb-2 h-5 w-5 text-orange-500"
-                                 fill="none"
-                                 stroke="currentColor"
-                                 viewBox="0 0 24 24">
-
-                                <path d="M7 3h7l5 5v13H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"
-                                      stroke-width="1.7"/>
-
-                                <path d="M14 3v5h5M9 13h7M9 17h7"
-                                      stroke-width="1.7"
-                                      stroke-linecap="round"/>
-
+            </div>
+        
+        {{-- KEAMANAN AKUN DAN LOGOUT --}}
+        @if (!$editMode)
+
+            {{-- KEAMANAN AKUN --}}
+            <div class="mt-6 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+
+                <div class="border-b border-slate-100 px-6 py-5 sm:px-8">
+                    <div class="flex items-center gap-3">
+                        <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-[#102B4A]">
+                            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 3 4 7v5c0 5 3.5 8 8 9 4.5-1 8-4 8-9V7l-8-4Z"
+                                    stroke-width="1.8" stroke-linejoin="round"/>
                             </svg>
+                        </div>
 
-                            <span class="text-[10px] font-bold text-[#142943]">
-                                Curriculum Vitae (CV) *
-                            </span>
-
-                            <span id="cvName" class="mt-1 max-w-full truncate text-[9px] text-slate-500">
-                                Pilih file PDF
-                            </span>
-
-                            <input
-                                type="file"
-                                name="cv"
-                                id="cv"
-                                accept=".pdf"
-                                required
-                                class="hidden"
-                                onchange="showFileName(this, 'cvName')"
-                            >
-
-                        </label>
-
+                        <div>
+                            <h3 class="text-base font-extrabold text-[#102B4A]">
+                                Keamanan Akun
+                            </h3>
+                            <p class="mt-1 text-sm text-slate-500">
+                                Kelola kata sandi untuk menjaga keamanan akun Anda.
+                            </p>
+                        </div>
                     </div>
-
-
-                    {{-- IJAZAH --}}
-
-                    <div>
-
-                        <label
-                            for="transcript"
-                            class="flex min-h-[90px] cursor-pointer flex-col items-center justify-center rounded border border-slate-200 bg-[#F5F7FC] p-3 text-center transition hover:border-orange-300 hover:bg-orange-50"
-                        >
-
-                            <svg class="mb-2 h-5 w-5 text-orange-500"
-                                 fill="none"
-                                 stroke="currentColor"
-                                 viewBox="0 0 24 24">
-
-                                <path d="M7 3h7l5 5v13H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"
-                                      stroke-width="1.7"/>
-
-                                <path d="M14 3v5h5M9 13h7M9 17h7"
-                                      stroke-width="1.7"
-                                      stroke-linecap="round"/>
-
-                            </svg>
-
-                            <span class="text-[10px] font-bold text-[#142943]">
-                                Ijazah / Transkrip *
-                            </span>
-
-                            <span id="transcriptName" class="mt-1 max-w-full truncate text-[9px] text-slate-500">
-                                Pilih file PDF
-                            </span>
-
-                            <input
-                                type="file"
-                                name="transcript"
-                                id="transcript"
-                                accept=".pdf"
-                                required
-                                class="hidden"
-                                onchange="showFileName(this, 'transcriptName')"
-                            >
-
-                        </label>
-
-                    </div>
-
-
-                    {{-- FOTO --}}
-
-                    <div>
-
-                        <label
-                            for="photo"
-                            class="flex min-h-[90px] cursor-pointer flex-col items-center justify-center rounded border border-slate-200 bg-[#F5F7FC] p-3 text-center transition hover:border-orange-300 hover:bg-orange-50"
-                        >
-
-                            <svg class="mb-2 h-5 w-5 text-orange-500"
-                                 fill="none"
-                                 stroke="currentColor"
-                                 viewBox="0 0 24 24">
-
-                                <rect x="3" y="5" width="18" height="15" rx="2"
-                                      stroke-width="1.7"/>
-
-                                <circle cx="9" cy="11" r="2"
-                                        stroke-width="1.7"/>
-
-                                <path d="m5 18 5-5 3 3 3-4 4 5"
-                                      stroke-width="1.7"
-                                      stroke-linecap="round"
-                                      stroke-linejoin="round"/>
-
-                            </svg>
-
-                            <span class="text-[10px] font-bold text-[#142943]">
-                                Pas Foto Formal (4x6) *
-                            </span>
-
-                            <span id="photoName" class="mt-1 max-w-full truncate text-[9px] text-slate-500">
-                                Pilih JPG / PNG
-                            </span>
-
-                            <input
-                                type="file"
-                                name="photo"
-                                id="photo"
-                                accept=".jpg,.jpeg,.png"
-                                required
-                                class="hidden"
-                                onchange="showFileName(this, 'photoName')"
-                            >
-
-                        </label>
-
-                    </div>
-
                 </div>
 
-            </section>
+                <div class="p-6 sm:p-8">
 
+                    <div class="mb-6">
+                        <h4 class="text-sm font-bold text-[#102B4A]">
+                            Ganti Kata Sandi
+                        </h4>
+                        <p class="mt-1 text-xs text-slate-500">
+                            Gunakan kata sandi yang kuat dan tidak mudah ditebak.
+                        </p>
+                    </div>
 
-            {{-- ==========================================
-                 PERSETUJUAN
-            =========================================== --}}
+                    <form action="{{ route('pelamar.password.update') }}" method="POST">
+                        @csrf
+                        @method('PUT')
 
-            <div class="rounded-md border border-blue-100 bg-[#F0F5FF] p-3">
+                        {{-- TIGA KOLOM PASSWORD --}}
+                        <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
 
-                <label class="flex cursor-pointer items-start gap-2">
+                            {{-- PASSWORD LAMA --}}
+                            <div>
+                                <label for="current_password" class="mb-2 block text-sm font-semibold text-slate-700">
+                                    Kata Sandi Lama
+                                </label>
 
-                    <input
-                        type="checkbox"
-                        name="agreement"
-                        value="1"
-                        required
-                        {{ old('agreement') ? 'checked' : '' }}
-                        class="mt-0.5 h-3.5 w-3.5 shrink-0 accent-blue-600"
+                                <div class="relative">
+                                    <input
+                                        type="password"
+                                        id="current_password"
+                                        name="current_password"
+                                        autocomplete="current-password"
+                                        required
+                                        class="block w-full rounded-xl border-2 border-solid border-slate-300 bg-white px-4 py-3 pr-12 text-sm text-slate-800 outline-none transition focus:border-orange-400 focus:ring-0"
+                                        placeholder="Masukkan kata sandi lama"
+                                    >
+
+                                    <button
+                                        type="button"
+                                        onclick="togglePassword('current_password', this)"
+                                        class="absolute inset-y-0 right-0 flex items-center justify-center border-0 bg-transparent px-4 text-slate-300 outline-none transition-colors"
+                                        aria-label="Tampilkan kata sandi"
+                                    >
+                                        <svg
+                                            class="h-5 w-5"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"
+                                                stroke-width="1.8"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                            />
+                                            <circle cx="12" cy="12" r="3" stroke-width="1.8"/>
+                                        </svg>
+                                    </button>
+                                </div>
+
+                                @error('current_password')
+                                    <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+                         
+                            {{-- PASSWORD BARU --}}
+                            <div>
+                                <label for="password" class="mb-2 block text-sm font-semibold text-slate-700">
+                                    Kata Sandi Baru
+                                </label>
+
+                                <div class="relative">
+                                    <input
+                                        type="password"
+                                        id="password"
+                                        name="password"
+                                        autocomplete="new-password"
+                                        minlength="8"
+                                        required
+                                        class="block w-full rounded-xl border-2 border-solid border-slate-300 bg-white px-4 py-3 pr-12 text-sm text-slate-800 outline-none transition focus:border-orange-400 focus:ring-0"
+                                        placeholder="Masukkan kata sandi baru"
+                                    >
+
+                                    <button
+                                        type="button"
+                                        onclick="togglePassword('password', this)"
+                                        class="absolute inset-y-0 right-0 flex items-center justify-center border-0 bg-transparent px-4 text-slate-300 outline-none transition-colors"
+                                        aria-label="Tampilkan kata sandi"
+                                    >
+                                        <svg
+                                            class="h-5 w-5"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"
+                                                stroke-width="1.8"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                            />
+                                            <circle cx="12" cy="12" r="3" stroke-width="1.8"/>
+                                        </svg>
+                                    </button>
+                                </div>
+
+                                {{-- INDIKATOR PASSWORD --}}
+                                <div id="passwordGuide" class="mt-3 hidden rounded-lg bg-slate-50 p-3">
+
+                                    <div class="mb-2 flex items-center justify-between">
+                                        <span class="text-xs font-semibold text-slate-600">
+                                            Kekuatan kata sandi
+                                        </span>
+
+                                        <span id="passwordStrength" class="text-xs font-bold text-slate-400">
+                                            Belum diisi
+                                        </span>
+                                    </div>
+
+                                    <div class="mb-3 flex gap-1">
+                                        <div id="strength1" class="h-1.5 flex-1 rounded-full bg-slate-200"></div>
+                                        <div id="strength2" class="h-1.5 flex-1 rounded-full bg-slate-200"></div>
+                                        <div id="strength3" class="h-1.5 flex-1 rounded-full bg-slate-200"></div>
+                                        <div id="strength4" class="h-1.5 flex-1 rounded-full bg-slate-200"></div>
+                                    </div>
+
+                                    <p class="mb-2 text-xs font-semibold text-slate-600">
+                                        Persyaratan kata sandi:
+                                    </p>
+
+                                    <ul class="space-y-1 text-xs">
+                                        <li id="ruleLength" class="text-slate-400">○ Minimal 8 karakter</li>
+                                        <li id="ruleUpper" class="text-slate-400">○ Mengandung huruf besar</li>
+                                        <li id="ruleLower" class="text-slate-400">○ Mengandung huruf kecil</li>
+                                        <li id="ruleNumber" class="text-slate-400">○ Mengandung angka</li>
+                                        <li id="ruleSymbol" class="text-slate-400">○ Mengandung simbol</li>
+                                    </ul>
+                                </div>
+
+                                @error('password')
+                                    <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        
+                            {{-- KONFIRMASI PASSWORD --}}
+                            <div>
+                                <label for="password_confirmation" class="mb-2 block text-sm font-semibold text-slate-700">
+                                    Konfirmasi Kata Sandi Baru
+                                </label>
+
+                                <div class="relative">
+                                    <input
+                                        type="password"
+                                        id="password_confirmation"
+                                        name="password_confirmation"
+                                        autocomplete="new-password"
+                                        minlength="8"
+                                        required
+                                        class="block w-full rounded-xl border-2 border-solid border-slate-300 bg-white px-4 py-3 pr-12 text-sm text-slate-800 outline-none transition focus:border-orange-400 focus:ring-0"
+                                        placeholder="Ulangi kata sandi baru"
+                                    >
+
+                                    <button
+                                        type="button"
+                                        onclick="togglePassword('password_confirmation', this)"
+                                        class="absolute inset-y-0 right-0 flex items-center justify-center border-0 bg-transparent px-4 text-slate-300 outline-none transition-colors"
+                                        aria-label="Tampilkan kata sandi"
+                                    >
+                                        <svg
+                                            class="h-5 w-5"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"
+                                                stroke-width="1.8"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                            />
+                                            <circle cx="12" cy="12" r="3" stroke-width="1.8"/>
+                                        </svg>
+                                    </button>
+                                </div>
+
+                                <p id="passwordMatch" class="mt-2 hidden text-xs"></p>
+                            </div>
+
+                        </div>
+
+                        {{-- TOMBOL SIMPAN --}}
+                        <div class="mt-8 flex justify-center border-t border-slate-100 pt-6">
+                            <button
+                                type="submit"
+                                class="inline-flex items-center justify-center rounded-lg border border-[#102B4A] bg-[#102B4A] px-6 py-3 text-sm font-bold text-white transition hover:border-orange-500 hover:bg-orange-500"
+                            >
+                                Simpan Kata Sandi Baru
+                                
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+            {{-- LOGOUT --}}
+            <div class="mt-6 flex justify-end rounded-2xl border border-red-100 bg-white p-5 shadow-sm sm:px-8">
+                <form action="{{ route('logout') }}" method="POST"
+                    onsubmit="return confirm('Apakah Anda yakin ingin keluar dari akun?')">
+                    @csrf
+
+                    <button
+                        type="submit"
+                        class="inline-flex items-center justify-center gap-2 rounded-lg border border-red-200 bg-white px-5 py-3 text-sm font-bold text-red-600 transition hover:border-red-500 hover:bg-red-50"
                     >
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path d="M10 17l5-5-5-5M15 12H3m9-9h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7"
+                                stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Logout
+                    </button>
+                </form>
+            </div>
 
-                    <span class="text-[10px] leading-5 text-slate-600">
+        @endif
 
-                        Saya menyatakan data yang diisi adalah benar dan sah. Saya bersedia mengikuti seleksi paling bertanggung jawab resmi dari PT. Equityworld Futures Cabang Trillium Surabaya tanpa dipungut biaya apa pun (Gratis & Bebas Pungutan).
+        {{-- TAB STATUS LAMARAN --}}
+        @elseif ($activeTab === 'lamaran')
 
-                    </span>
+            <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
 
-                </label>
+                <div class="mb-7">
+                    <p class="text-xs font-bold uppercase tracking-widest text-orange-500">
+                        Riwayat Pendaftaran
+                    </p>
+
+                    <h2 class="mt-2 text-xl font-extrabold text-[#102B4A]">
+                        Status Lamaran Saya
+                    </h2>
+
+                    <p class="mt-1 text-sm text-slate-500">
+                        Informasi perkembangan proses seleksi lamaran Anda.
+                    </p>
+                </div>
+
+                <div class="rounded-2xl border border-dashed border-slate-200 bg-slate-50 px-5 py-12 text-center">
+
+                    <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-orange-100 text-orange-600">
+                        <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path d="M7 3h7l5 5v13H5V3h2Zm7 0v5h5M8 13h8M8 17h8" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+
+                    <h3 class="mt-5 text-base font-extrabold text-[#102B4A]">
+                        Belum Ada Lamaran
+                    </h3>
+
+                    <p class="mx-auto mt-2 max-w-md text-sm leading-relaxed text-slate-500">
+                        Anda belum memiliki riwayat lamaran. Silakan jelajahi lowongan Staff atau program Magang yang tersedia.
+                    </p>
+
+                    <a href="{{ route('careers') }}"
+                        class="mt-6 inline-flex items-center gap-2 rounded-lg bg-[#102B4A] px-5 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-orange-500">
+                        Jelajahi Lowongan
+                        <span>→</span>
+                    </a>
+
+                </div>
 
             </div>
 
+        @else
 
-            {{-- ==========================================
-                 TOMBOL AKSI
-            =========================================== --}}
+            <script>
+                window.location.replace("{{ route('pelamar.dashboard', ['tab' => 'profil']) }}");
+            </script>
 
-            <div class="mt-5 flex flex-col-reverse items-stretch justify-between gap-3 sm:flex-row sm:items-center">
-
-                <a
-                    href="{{ route('careers') }}"
-                    class="inline-flex min-h-9 items-center justify-center rounded border border-slate-200 bg-white px-4 py-2 text-[10px] font-bold text-slate-600 transition hover:bg-slate-50"
-                >
-                    Batal / Kembali ke Katalog
-                </a>
-
-
-                <button
-                    type="submit"
-                    class="inline-flex min-h-9 items-center justify-center gap-2 rounded bg-[#102B4A] px-5 py-2.5 text-[10px] font-bold text-white shadow-sm transition hover:bg-orange-500"
-                >
-
-                    <svg class="h-3.5 w-3.5"
-                         fill="none"
-                         stroke="currentColor"
-                         viewBox="0 0 24 24">
-
-                        <path d="M5 12h14m-6-6 6 6-6 6"
-                              stroke-width="2"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"/>
-
-                    </svg>
-
-                    Kirim Lamaran Sekarang
-
-                </button>
-
-            </div>
-
-        </form>
+        @endif
 
     </div>
-
-
-    {{-- ==========================================
-         STATUS LAMARAN
-    =========================================== --}}
-
-    <section id="status-lamaran" class="mt-6 rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
-
-        <h2 class="text-sm font-extrabold text-[#142943]">
-            Status Lamaran
-        </h2>
-
-        <p class="mt-2 text-[11px] leading-5 text-slate-500">
-            Informasi status seleksi dan perkembangan lamaran akan ditampilkan di bagian ini setelah lamaran berhasil dikirim.
-        </p>
-
-    </section>
-
 </div>
 
-@endsection
-
-
-{{-- ==========================================
-     JAVASCRIPT
-========================================== --}}
-
-@push('scripts')
 
 <script>
+document.addEventListener('DOMContentLoaded', function () {
+    const password = document.getElementById('password');
+    const confirmation = document.getElementById('password_confirmation');
+    const guide = document.getElementById('passwordGuide');
 
-// ==========================================
-// PILIH PROGRAM LAMARAN
-// ==========================================
+    if (!password || !guide) return;
 
-document.querySelectorAll('.program-button').forEach(function(button) {
+    const rules = {
+        length: value => value.length >= 8,
+        upper: value => /[A-Z]/.test(value),
+        lower: value => /[a-z]/.test(value),
+        number: value => /[0-9]/.test(value),
+        symbol: value => /[^A-Za-z0-9]/.test(value)
+    };
 
-    button.addEventListener('click', function() {
+    const ruleElements = {
+        length: document.getElementById('ruleLength'),
+        upper: document.getElementById('ruleUpper'),
+        lower: document.getElementById('ruleLower'),
+        number: document.getElementById('ruleNumber'),
+        symbol: document.getElementById('ruleSymbol')
+    };
 
-        const program = this.dataset.program;
+    const strengthText = document.getElementById('passwordStrength');
 
-        document.getElementById('applicationType').value = program;
-
-        document.querySelectorAll('.program-button').forEach(function(item) {
-
-            item.classList.remove(
-                'bg-orange-500',
-                'text-white',
-                'shadow-sm'
-            );
-
-            item.classList.add(
-                'text-slate-600'
-            );
-
-        });
-
-        this.classList.add(
-            'bg-orange-500',
-            'text-white',
-            'shadow-sm'
-        );
-
-        this.classList.remove(
-            'text-slate-600'
-        );
-
-        const label = document.querySelector('.form-program-label');
-
-        if (label) {
-
-            label.textContent = program === 'internship'
-                ? 'PROGRAM MAGANG (INTERNSHIP)'
-                : 'STAFF KANTOR (FULL-TIME)';
-
-        }
-
+    password.addEventListener('focus', function () {
+        guide.classList.remove('hidden');
     });
 
-});
+    password.addEventListener('input', function () {
+        const value = password.value;
 
+        guide.classList.toggle('hidden', value.length === 0);
 
-// ==========================================
-// MENAMPILKAN NAMA FILE
-// ==========================================
+        let score = 0;
 
-function showFileName(input, targetId) {
+        Object.keys(rules).forEach(key => {
+            const passed = rules[key](value);
 
-    const target = document.getElementById(targetId);
+            if (passed) score++;
 
-    if (input.files && input.files.length > 0) {
+            ruleElements[key].textContent =
+                (passed ? '✓ ' : '○ ') +
+                ({
+                    length: 'Minimal 8 karakter',
+                    upper: 'Mengandung huruf besar',
+                    lower: 'Mengandung huruf kecil',
+                    number: 'Mengandung angka',
+                    symbol: 'Mengandung simbol'
+                })[key];
 
-        const file = input.files[0];
+            ruleElements[key].className = passed
+                ? 'text-green-600'
+                : 'text-slate-400';
+        });
 
-        if (file.size > 5 * 1024 * 1024) {
+        const labels = [
+            'Lemah',
+            'Lemah',
+            'Sedang',
+            'Kuat',
+            'Sangat Kuat',
+            'Sangat Kuat'
+        ];
 
-            alert('Ukuran file maksimal 5MB.');
+        strengthText.textContent = value.length
+            ? labels[score]
+            : 'Belum diisi';
 
-            input.value = '';
+        strengthText.className = 'text-xs font-bold ' +
+            (score <= 2 ? 'text-red-600' :
+            score === 3 ? 'text-orange-500' : 'text-green-600');
 
-            target.textContent = 'Pilih file kembali';
+        for (let i = 1; i <= 4; i++) {
+            const bar = document.getElementById('strength' + i);
 
-            return;
-
+            bar.className = 'h-1.5 flex-1 rounded-full ' +
+                (i <= score
+                    ? (score <= 2 ? 'bg-red-500' :
+                       score === 3 ? 'bg-orange-400' : 'bg-green-500')
+                    : 'bg-slate-200');
         }
 
-        target.textContent = file.name;
+        checkPasswordMatch();
+    });
 
+    function checkPasswordMatch() {
+        if (!confirmation || !confirmation.value) return;
+
+        const match = document.getElementById('passwordMatch');
+        match.classList.remove('hidden');
+
+        if (password.value === confirmation.value) {
+            match.textContent = '✓ Konfirmasi kata sandi sesuai.';
+            match.className = 'mt-2 text-xs text-green-600';
+        } else {
+            match.textContent = '✕ Konfirmasi kata sandi belum sesuai.';
+            match.className = 'mt-2 text-xs text-red-600';
+        }
     }
 
-}
+    if (confirmation) {
+        confirmation.addEventListener('input', checkPasswordMatch);
+    }
+});
 
+// TAMBAHKAN FUNGSI TOGGLE PASSWORD DI SINI
+function togglePassword(inputId, button) {
+    const input = document.getElementById(inputId);
+
+    if (!input) return;
+
+    const isHidden = input.type === 'password';
+
+    // Ubah kondisi password
+    input.type = isHidden ? 'text' : 'password';
+
+    // Ubah warna ikon sesuai kondisi password
+    button.style.color = isHidden ? '#F97316' : '#CBD5E1';
+
+    // Ubah keterangan aksesibilitas
+    button.setAttribute(
+        'aria-label',
+        isHidden ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'
+    );
+}
 </script>
 
-@endpush
+@endsection

@@ -1,40 +1,33 @@
 
-{{-- =====================================================
-    POPUP LOGIN DAN REGISTRASI
-    PT EQUITYWORLD FUTURES
-===================================================== --}}
+{{-- POPUP LOGIN DAN REGISTRASI
+    PT EQUITYWORLD FUTURES --}}
 
 <div
     id="authModal"
-    class="fixed inset-0 z-[99999] hidden items-center justify-center overflow-y-auto bg-slate-950/30 p-3 backdrop-blur-[2px] sm:p-5"
+    class="auth-modal-scroll fixed inset-0 z-[99999] hidden items-center justify-center overflow-y-auto bg-slate-950/30 p-3 backdrop-blur-[2px] sm:p-5"
     aria-hidden="true"
 >
     {{-- CONTAINER UTAMA --}}
 
     <div
         id="authModalContent"
-        class="relative grid h-auto min-h-[440px] max-h-[90vh] w-full max-w-[720px] grid-cols-1 overflow-hidden rounded-2xl bg-white shadow-2xl lg:h-[490px] lg:grid-cols-[0.9fr_1.1fr]"
+        class="relative grid h-auto min-h-[440px] max-h-[90vh] w-full max-w-[720px] grid-cols-1 overflow-hidden rounded-2xl bg-white shadow-2xl lg:h-[490px] lg:grid-cols-[0.8fr_1.2fr]"
         role="dialog"
         aria-modal="true"
         aria-labelledby="authWelcomeTitle"
     >
-
         {{-- TOMBOL TUTUP --}}
-
         <button
             type="button"
             id="closeAuthModal"
-            class="absolute right-3 top-3 z-50 flex h-8 w-8 items-center justify-center rounded-full border border-slate-200 bg-white text-lg font-semibold text-slate-600 shadow-sm transition hover:border-orange-400 hover:bg-orange-500 hover:text-white"
+            style="position: absolute; top: 10px; right: 12px;"
+            class="z-[100] flex h-8 w-8 items-center justify-center border-0 bg-transparent text-2xl font-semibold leading-none text-slate-500 transition hover:bg-transparent hover:text-orange-500 focus:outline-none"
             aria-label="Tutup popup"
         >
             &times;
         </button>
 
-
-        {{-- =================================================
-             PANEL KIRI
-        ================================================== --}}
-
+        {{-- PANEL KIRI --}}
         <section
             class="relative hidden min-w-0 flex-col justify-between overflow-hidden bg-[#101D35] px-6 py-6 text-white lg:flex"
         >
@@ -63,9 +56,7 @@
 
             </div>
 
-
             {{-- WELCOME CONTENT --}}
-
             <div class="relative z-10 my-auto py-6">
 
                 <p class="mb-2 text-[11px] font-bold uppercase tracking-[0.25em] text-orange-400">
@@ -195,22 +186,15 @@
 
                     Trillium Surabaya
                 </p>
-
             </div>
 
         </section>
 
-
-        {{-- =================================================
-             PANEL KANAN
-        ================================================== --}}
-
+        {{-- PANEL KANAN --}}
         <section
-            class="relative flex min-h-0 min-w-0 flex-col justify-start overflow-y-auto bg-white px-5 pb-5 pt-14 sm:px-7 lg:px-7 lg:pb-6 lg:pt-12"
+            class="auth-scrollbar relative flex min-h-0 min-w-0 flex-col justify-start overflow-y-auto bg-white px-5 pb-5 pt-10 sm:px-7 lg:px-7 lg:pb-6 lg:pt-8"
         >
-
             {{-- LOGO MOBILE --}}
-
             <div class="mb-4 flex items-center lg:hidden">
 
                 <img
@@ -220,32 +204,37 @@
                 >
 
             </div>
-
-
+               
             {{-- TAB LOGIN DAN REGISTRASI --}}
+            <div class="relative mb-3 grid shrink-0 grid-cols-2 overflow-hidden rounded-full bg-slate-100 p-1">
 
-            <div class="mb-5 grid shrink-0 grid-cols-2 gap-2 rounded-xl bg-slate-100 p-1">
+                {{-- SLIDING INDICATOR --}}
+                <div
+                    id="authTabIndicator"
+                    class="absolute bottom-1 left-1 top-1 z-0 w-[calc(50%-4px)] rounded-l-full rounded-r-none bg-[#101D35] shadow-sm transition-all duration-300 ease-in-out"
+                ></div>
 
+                {{-- LOGIN --}}
                 <button
                     type="button"
                     data-auth-tab="login"
-                    class="auth-tab rounded-lg bg-[#101D35] px-3 py-2.5 text-xs font-bold text-white shadow-sm transition"
+                    class="auth-tab relative z-10 border-0 bg-transparent px-3 py-2.5 text-xs font-bold text-white outline-none transition-colors duration-300"
                     aria-selected="true"
                 >
                     Login
                 </button>
 
+                {{-- REGISTRASI --}}
                 <button
                     type="button"
                     data-auth-tab="register"
-                    class="auth-tab rounded-lg px-3 py-2.5 text-xs font-bold text-slate-500 transition hover:text-[#101D35]"
+                    class="auth-tab relative z-10 border-0 bg-transparent px-3 py-2.5 text-xs font-bold text-slate-500 outline-none transition-colors duration-300"
                     aria-selected="false"
                 >
                     Registrasi
                 </button>
 
             </div>
-
 
             {{-- FORM LOGIN --}}
 
@@ -263,10 +252,7 @@
 
 </div>
 
-
-{{-- =====================================================
-     JAVASCRIPT POPUP
-===================================================== --}}
+{{-- JAVASCRIPT POPUP --}}
 
 <script>
 (function () {
@@ -282,33 +268,34 @@
     const tabs = modal.querySelectorAll('[data-auth-tab]');
 
     const loginForm = document.getElementById('loginForm');
-
     const registerForm = document.getElementById('registerForm');
+    const loginContext = document.getElementById('loginContext');
+    const registerContext = document.getElementById('registerContext');
 
-
-    // ==========================================
     // MEMBUKA POPUP
-    // ==========================================
-
-    window.openAuthPopup = function (mode = 'login') {
+    window.openAuthPopup = function (mode = 'login', context = 'general') {
 
         modal.classList.remove('hidden');
-
         modal.classList.add('flex');
 
         modal.setAttribute('aria-hidden', 'false');
 
         document.body.classList.add('overflow-hidden');
 
+        // Simpan asal proses login dan registrasi
+        if (loginContext) {
+            loginContext.value = context;
+        }
+
+        if (registerContext) {
+            registerContext.value = context;
+        }
+
         window.switchAuthTab(mode);
 
     };
 
-
-    // ==========================================
     // PINDAH TAB LOGIN DAN REGISTRASI
-    // ==========================================
-
     window.switchAuthTab = function (mode = 'login') {
 
         const selectedMode =
@@ -323,37 +310,43 @@
 
         }
 
-
         if (registerForm) {
 
             registerForm.classList.toggle('hidden', isLogin);
 
         }
 
+        // SLIDING INDICATOR
+        const tabIndicator = document.getElementById('authTabIndicator');
 
+        if (tabIndicator) {
+            tabIndicator.classList.toggle('translate-x-full', !isLogin);
+
+            // Warna indikator
+            tabIndicator.classList.toggle('bg-[#101D35]', isLogin);
+            tabIndicator.classList.toggle('bg-orange-500', !isLogin);
+
+            // Bentuk sudut: membulat hanya di sisi luar
+            tabIndicator.classList.toggle('rounded-l-full', isLogin);
+            tabIndicator.classList.toggle('rounded-r-none', isLogin);
+            tabIndicator.classList.toggle('rounded-l-none', !isLogin);
+            tabIndicator.classList.toggle('rounded-r-full', !isLogin);
+        }
+
+        // WARNA TULISAN TAB
         tabs.forEach(function (tab) {
-
-            const active =
-                tab.dataset.authTab === selectedMode;
-
-            tab.classList.toggle('bg-[#101D35]', active);
+            const active = tab.dataset.authTab === selectedMode;
 
             tab.classList.toggle('text-white', active);
-
-            tab.classList.toggle('shadow-sm', active);
-
             tab.classList.toggle('text-slate-500', !active);
 
             tab.setAttribute(
                 'aria-selected',
                 active ? 'true' : 'false'
             );
-
         });
 
-
         // KEMBALIKAN POSISI SCROLL KE ATAS
-
         const rightPanel = modal.querySelector(
             '#authModalContent > section:last-of-type'
         );
@@ -366,11 +359,7 @@
 
     };
 
-
-    // ==========================================
     // KLIK TAB
-    // ==========================================
-
     tabs.forEach(function (tab) {
 
         tab.addEventListener('click', function () {
@@ -381,11 +370,7 @@
 
     });
 
-
-    // ==========================================
     // MENUTUP POPUP
-    // ==========================================
-
     window.closeAuthPopup = function () {
 
         modal.classList.add('hidden');
@@ -398,7 +383,6 @@
 
     };
 
-
     if (closeButton) {
 
         closeButton.addEventListener(
@@ -408,11 +392,7 @@
 
     }
 
-
-    // ==========================================
     // KLIK DI LUAR POPUP
-    // ==========================================
-
     modal.addEventListener('click', function (event) {
 
         if (event.target === modal) {
@@ -423,11 +403,7 @@
 
     });
 
-
-    // ==========================================
     // TOMBOL ESCAPE
-    // ==========================================
-
     document.addEventListener('keydown', function (event) {
 
         if (
@@ -441,11 +417,7 @@
 
     });
 
-
-    // ==========================================
     // TAMPILKAN / SEMBUNYIKAN PASSWORD
-    // ==========================================
-
     window.toggleAuthPassword = function (inputId, button) {
 
         const input = document.getElementById(inputId);
@@ -474,11 +446,7 @@
 
     };
 
-
-    // ==========================================
     // LINK LOGIN DAN REGISTRASI
-    // ==========================================
-
     document.addEventListener('click', function (event) {
 
         const target = event.target instanceof Element
@@ -519,17 +487,31 @@
 
     }, true);
 
-    // ==========================================
     // OTOMATIS MEMBUKA POPUP SETELAH REDIRECT
-    // ==========================================
 
     @if(session('open_auth_modal'))
 
         window.openAuthPopup(
-            @json(session('open_auth_modal'))
+            @json(session('open_auth_modal')),
+            @json(session('auth_context', 'general'))
         );
 
     @endif
 
 })();
 </script>
+
+<style>
+    .auth-modal-scroll,
+    .auth-scrollbar {
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    .auth-modal-scroll::-webkit-scrollbar,
+    .auth-scrollbar::-webkit-scrollbar {
+        display: none;
+        width: 0;
+        height: 0;
+    }
+</style>

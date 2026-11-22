@@ -95,96 +95,225 @@
             </a>
 
         </nav>
+    
+        {{-- AKSES AKUN DESKTOP --}}
+        <div class="ewf-desktop-login hidden shrink-0 items-center gap-3 min-[1200px]:flex">
 
-    {{-- LOGIN DESKTOP --}}
-    <div class="ewf-desktop-login group relative hidden shrink-0 min-[1200px]:block">
-        <button
-            id="ewf-login-toggle"
-            type="button"
-            class="inline-flex items-center gap-2 rounded-[15px] border border-orange-600/40 bg-[#ff7417] px-5 py-3 text-[13px] font-bold text-white transition duration-200 hover:bg-[#ed650d] cursor-pointer"
-            aria-haspopup="true"
-            aria-expanded="false"
-            aria-controls="ewf-login-dropdown"
-        >
-            <svg width="18" height="18" viewBox="0 0 24 24"
-                fill="none" stroke="currentColor" stroke-width="1.8"
-                stroke-linecap="round" stroke-linejoin="round"
-                aria-hidden="true">
-                <circle cx="12" cy="8" r="3.5"/>
-                <path d="M5 20c.7-4 3-6 7-6s6.3 2 7 6"/>
-            </svg>
+            @auth
+                @if(auth()->user()->role === 'pelamar')
 
-            <span>Masuk</span>
+                    {{-- NOTIFIKASI --}}
+                    <details class="relative">
+                        <summary
+                            class="relative flex h-10 w-10 cursor-pointer list-none items-center justify-center rounded-full text-[#142D59] transition hover:bg-blue-50"
+                            aria-label="Notifikasi"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                class="h-5 w-5"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                stroke-width="1.8">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M15 17h5l-1.4-1.4A2 2 0 0 1 18 14.2V11a6 6 0 0 0-4.5-5.8V4a1.5 1.5 0 0 0-3 0v1.2A6 6 0 0 0 6 11v3.2a2 2 0 0 1-.6 1.4L4 17h5m6 0a3 3 0 0 1-6 0m6 0H9" />
+                            </svg>
+                    
+                        </summary>
 
-            <svg width="16" height="16" viewBox="0 0 20 20"
-                fill="none" stroke="currentColor" stroke-width="1.8"
-                aria-hidden="true">
-                <path d="m5 7 5 5 5-5"/>
-            </svg>
-        </button>
+                        <div class="absolute right-0 z-50 mt-3 w-80 rounded-xl border border-gray-100 bg-white p-4 shadow-xl">
+                            <h3 class="font-bold text-[#142D59]">Notifikasi</h3>
+                            <p class="mt-3 text-sm text-gray-500">
+                                Belum ada notifikasi.
+                            </p>
+                        </div>
+                    </details>
 
-        <div
-            id="ewf-login-dropdown"
-            class="hidden absolute right-0 top-full z-[100] w-max max-w-[calc(100vw-32px)] pt-3"
-        >
+                    {{-- PROFIL PELAMAR --}}
+                    <details class="relative">
 
-            <div class="overflow-hidden rounded-2xl border border-slate-300 bg-white p-2 shadow-[0_12px_30px_rgba(15,23,42,0.12)] ring-1 ring-slate-200">
+                    <summary class="flex cursor-pointer list-none items-center gap-2 rounded-full border border-gray-200 py-1 pl-1 pr-3 transition hover:bg-gray-50">
 
-                {{-- JUDUL DROPDOWN --}}
-                <div class="border-b border-slate-100 px-5 py-4">
-                    <strong class="block text-lg font-bold text-[#102a43]">
-                        Selamat Datang
-                    </strong>
+                        <span class="flex h-9 w-9 items-center justify-center rounded-full bg-[#142D59] text-sm font-bold uppercase text-white">
+                            {{ mb_substr(auth()->user()->name, 0, 1) }}
+                        </span>
 
-                    <small class="mt-1 block text-sm text-slate-500">
-                        Silakan pilih akses akun Anda
-                    </small>
+                        <span class="max-w-[120px] truncate text-sm font-semibold text-[#142D59]">
+                            {{ auth()->user()->name }}
+                        </span>
+
+                        <svg class="h-4 w-4 text-gray-500" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                stroke-width="2" d="m6 9 6 6 6-6" />
+                        </svg>
+
+                    </summary>
+
+                        <div class="absolute right-0 z-50 mt-3 w-64 overflow-hidden rounded-2xl border border-slate-100 bg-white p-2 shadow-[0_15px_40px_rgba(15,23,42,0.15)]">
+
+                            {{-- PROFIL SAYA --}}
+                            <a href="{{ route('pelamar.dashboard', ['tab' => 'profil']) }}"
+                                class="group flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold text-slate-700 transition-all duration-200 hover:bg-blue-50 hover:text-blue-600">
+
+                                <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-500 transition group-hover:bg-blue-100 group-hover:text-blue-600">
+                                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path d="M20 21a8 8 0 0 0-16 0m8-10a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"
+                                            stroke-width="1.8" stroke-linecap="round"/>
+                                    </svg>
+                                </span>
+
+                                <span class="flex-1">Profil Saya</span>
+
+                                <svg class="h-4 w-4 text-slate-300 transition group-hover:translate-x-1 group-hover:text-blue-500"
+                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path d="m9 18 6-6-6-6" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                            </a>
+
+                            {{-- STATUS LAMARAN --}}
+                            <a href="{{ route('pelamar.dashboard', ['tab' => 'lamaran']) }}"
+                                class="group flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold text-slate-700 transition-all duration-200 hover:bg-orange-50 hover:text-orange-600">
+
+                                <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-500 transition group-hover:bg-orange-100 group-hover:text-orange-600">
+                                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path d="M8 7V3m8 4V3M4 11h16M5 5h14a1 1 0 0 1 1 1v14H4V6a1 1 0 0 1 1-1Z"
+                                            stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </span>
+
+                                <span class="flex-1">Status Lamaran</span>
+
+                                <svg class="h-4 w-4 text-slate-300 transition group-hover:translate-x-1 group-hover:text-orange-500"
+                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path d="m9 18 6-6-6-6" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                            </a>
+
+                            {{-- PEMBATAS --}}
+                            <div class="my-2 border-t border-slate-100"></div>
+
+                            {{-- KELUAR --}}
+                            <form action="{{ route('logout') }}" method="POST"
+                                onsubmit="return confirm('Apakah Anda yakin ingin keluar dari akun?')">
+                                @csrf
+
+                                <button type="submit"
+                                    class="flex w-full items-center justify-center gap-2 rounded-xl border-0 bg-transparent px-4 py-3 text-sm font-bold text-red-600 transition-all duration-200 hover:bg-red-50 hover:text-red-700">
+
+                                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path d="M10 17l5-5-5-5m5 5H3m9-9h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7"
+                                            stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+
+                                    Keluar
+                                </button>
+                            </form>
+
+                        </div>
+
+                    </details>
+
+                @elseif(auth()->user()->role === 'admin')
+                    <a href="{{ route('admin.dashboard') }}"
+                        class="rounded-lg bg-[#142D59] px-5 py-2.5 text-sm font-semibold text-white">
+                        Dashboard Admin
+                    </a>
+
+                @elseif(auth()->user()->role === 'hrd')
+                    <a href="{{ route('hrd.dashboard') }}"
+                        class="rounded-lg bg-[#142D59] px-5 py-2.5 text-sm font-semibold text-white">
+                        Dashboard HRD
+                    </a>
+                @endif
+
+            @else
+
+            {{-- LOGIN DAN REGISTRASI UNTUK PENGUNJUNG --}}
+            <div class="group relative">
+
+                {{-- TOMBOL MASUK --}}
+                <button
+                    id="ewf-login-toggle"
+                    type="button"
+                    class="inline-flex items-center justify-center rounded-lg border border-orange-600 bg-[#F28C28] px-5 py-2.5 text-sm font-bold text-white shadow-sm transition-all duration-200 hover:border-orange-700 hover:bg-[#E87917] hover:shadow-md focus:outline-none focus:ring-2 focus:ring-orange-300"
+                >
+                    Masuk
+                </button>
+
+                {{-- DROPDOWN LOGIN DAN REGISTRASI --}}
+                <div
+                    id="ewf-login-dropdown"
+                    class="invisible absolute right-0 top-full z-50 mt-2 w-56 translate-y-2 overflow-hidden rounded-2xl border border-slate-100 bg-white p-2 opacity-0 shadow-[0_12px_35px_rgba(15,23,42,0.15)] transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100"
+                >
+
+                    {{-- MENU LOGIN --}}
+                    <a
+                        href="{{ url('/login') }}"
+                        class="group/item flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold text-slate-700 no-underline transition-all duration-200 hover:bg-orange-50 hover:text-orange-600 focus:bg-orange-50 focus:text-orange-600 focus:outline-none"
+                    >
+                        <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-500 transition-all duration-200 group-hover/item:bg-orange-100 group-hover/item:text-orange-600">
+                            <svg
+                                class="h-[18px] w-[18px]"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            >
+                                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+                                <path d="m10 17 5-5-5-5"/>
+                                <path d="M15 12H3"/>
+                            </svg>
+                        </span>
+
+                        <span class="flex-1">Login</span>
+
+                        <svg class="h-4 w-4 text-slate-300 transition group-hover/item:translate-x-1 group-hover/item:text-orange-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="m9 18 6-6-6-6"/>
+                        </svg>
+                    </a>
+
+                    {{-- MENU REGISTRASI --}}
+                    <a
+                        href="{{ route('registration') }}"
+                        class="group/item flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold text-slate-700 no-underline transition-all duration-200 hover:bg-blue-50 hover:text-blue-600 focus:bg-blue-50 focus:text-blue-600 focus:outline-none"
+                    >
+                        <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-500 transition-all duration-200 group-hover/item:bg-blue-100 group-hover/item:text-blue-600"
+                        >
+                            <svg
+                                class="h-[18px] w-[18px]"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            >
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                <circle cx="10" cy="7" r="4"/>
+                                <path d="M19 8v6M16 11h6"/>
+                            </svg>
+                        </span>
+
+                        <span class="flex-1">Registrasi</span>
+
+                        <svg class="h-4 w-4 text-slate-300 transition group-hover/item:translate-x-1 group-hover/item:text-blue-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="m9 18 6-6-6-6"/>
+                        </svg>
+                    </a>
+
                 </div>
-
-                {{-- LOGIN --}}
-                <a href="{{ url('/login') }}"
-                class="flex items-center gap-3 whitespace-nowrap rounded-xl px-3 py-3 text-base font-semibold text-slate-700 no-underline transition duration-200 hover:bg-blue-50">
-
-                    <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-[#2868f4]">
-                        <svg class="h-5 w-5" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="1.8"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M10 17l5-5-5-5"/>
-                            <path d="M15 12H3"/>
-                            <path d="M12 3h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6"/>
-                        </svg>
-                    </span>
-
-                    <span>Login – Masuk ke akun Anda</span>
-                </a>
-
-                {{-- REGISTRASI --}}
-                <a href="{{ route('registration') }}"
-                class="flex items-center gap-3 whitespace-nowrap rounded-xl px-3 py-3 text-base font-semibold text-slate-700 no-underline transition duration-200 hover:bg-orange-50">
-
-                    <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-orange-50 text-[#ef8b23]">
-                        <svg class="h-5 w-5" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="1.8"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="9" cy="8" r="3.5"/>
-                            <path d="M2.5 20c.6-3.8 2.8-5.7 6.5-5.7"/>
-                            <path d="M18 8v8m-4-4h8"/>
-                        </svg>
-                    </span>
-
-                    <span>Registrasi – Buat akun baru</span>
-                </a>
-
             </div>
-        </div>
 
-    </div>
+            @endauth
+        </div>
 
         {{-- TOMBOL HAMBURGER MOBILE --}}
         <button
             id="ewf-mobile-toggle"
             type="button"
-            class="box-border flex h-[46px] w-[46px] shrink-0 appearance-none items-center justify-center rounded-[13px] border border-solid border-[#d6dee8] bg-white p-0 shadow-none outline-none ring-0 cursor-pointer"
+            class="box-border flex h-[46px] w-[46px] shrink-0 appearance-none items-center justify-center rounded-[13px] border border-solid border-[#d6dee8] bg-white p-0 shadow-none outline-none ring-0 cursor-pointer min-[1200px]:hidden"
             aria-label="Buka menu navigasi"
             aria-expanded="false"
             aria-controls="ewf-mobile-panel"
@@ -292,57 +421,85 @@
 
             <div class="my-[17px] h-px bg-[#e9eef5]"></div>
 
-            <p class="mb-[10px] text-[10px] font-extrabold uppercase tracking-[1.5px] text-slate-400">
-                Akses Akun
-            </p>
+            {{-- AKSES AKUN MOBILE --}}
+            <div class="mt-5 border-t border-gray-200 pt-4">
 
-    <div class="grid grid-cols-2 gap-[18px]">
+                @auth
+                    @if(auth()->user()->role === 'pelamar')
 
-        {{-- LOGIN --}}
-        <a
-            href="{{ url('/login') }}"
-            class="box-border flex h-12 items-center justify-center gap-[9px] rounded-[14px] bg-[#102a43] p-[6px] text-base font-extrabold text-white no-underline whitespace-nowrap"
-        >
-            <svg
-                class="h-5 w-5 shrink-0"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.8"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                aria-hidden="true"
-            >
-                <path d="M10 17l5-5-5-5"/>
-                <path d="M15 12H3"/>
-                <path d="M12 3h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6"/>
-            </svg>
-            <span>Login</span>
-        </a>
+                        <div class="mb-4 flex items-center gap-3">
+                            <span class="flex h-10 w-10 items-center justify-center rounded-full bg-[#142D59] font-bold uppercase text-white">
+                                {{ mb_substr(auth()->user()->name, 0, 1) }}
+                            </span>
 
-        {{-- REGISTRASI --}}
-        <a
-            href="{{ route('registration') }}"
-            class="box-border flex h-12 items-center justify-center gap-[9px] rounded-[14px] bg-[#ff7417] p-[6px] text-base font-extrabold text-white no-underline whitespace-nowrap"
-        >
-            <svg
-                class="h-5 w-5 shrink-0"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.8"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                aria-hidden="true"
-            >
-                <circle cx="9" cy="8" r="3.5"/>
-                <path d="M2.5 20c.6-3.8 2.8-5.7 6.5-5.7"/>
-                <path d="M18 8v8m-4-4h8"/>
-            </svg>
-            <span>Registrasi</span>
-        </a>
+                            <div class="min-w-0">
+                                <p class="truncate text-sm font-bold text-[#142D59]">
+                                    {{ auth()->user()->name }}
+                                </p>
+                                <p class="text-xs text-gray-500">Akun Pelamar</p>
+                            </div>
+                        </div>
 
-    </div>
+                        <div class="space-y-2">
+                            <a href="{{ route('pelamar.dashboard', ['tab' => 'profil']) }}"
+                                class="block rounded-lg px-4 py-3 text-sm text-gray-700 hover:bg-blue-50">
+                                Profil Saya
+                            </a>
+
+                            <a href="{{ route('pelamar.dashboard', ['tab' => 'lamaran']) }}"
+                                class="block rounded-lg px-4 py-3 text-sm text-gray-700 hover:bg-blue-50">
+                                Status Lamaran
+                            </a>
+
+                            <div class="rounded-lg px-4 py-3 text-sm text-gray-500">
+                                Notifikasi
+                                <span class="ml-1 text-xs">(Belum tersedia)</span>
+                            </div>
+
+                            <form action="{{ route('logout') }}" method="POST"
+                                onsubmit="return confirm('Apakah Anda yakin ingin keluar dari akun?')">
+                                @csrf
+                                <button type="submit"
+                                    class="w-full rounded-lg px-4 py-3 text-left text-sm font-semibold text-red-600 hover:bg-red-50">
+                                    Keluar
+                                </button>
+                            </form>
+                        </div>
+
+                    @elseif(auth()->user()->role === 'admin')
+                        <a href="{{ route('admin.dashboard') }}"
+                            class="block rounded-lg bg-[#142D59] px-4 py-3 text-center text-sm font-semibold text-white">
+                            Dashboard Admin
+                        </a>
+
+                    @elseif(auth()->user()->role === 'hrd')
+                        <a href="{{ route('hrd.dashboard') }}"
+                            class="block rounded-lg bg-[#142D59] px-4 py-3 text-center text-sm font-semibold text-white">
+                            Dashboard HRD
+                        </a>
+                    @endif
+
+                @else
+
+                    <p class="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
+                        Akses Akun
+                    </p>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <a href="{{ url('/login') }}"
+                            class="rounded-lg border border-[#142D59] px-4 py-3 text-center text-sm font-semibold text-[#142D59]">
+                            Login
+                        </a>
+
+                        <a href="{{ route('registration') }}"
+                            class="rounded-lg bg-[#142D59] px-4 py-3 text-center text-sm font-semibold text-white">
+                            Registrasi
+                        </a>
+                    </div>
+
+                @endauth
+            </div>
+
 
                 <p class="mt-[17px] text-center text-[10px] text-slate-400">
                     PT. Equityworld Futures · Trillium Surabaya

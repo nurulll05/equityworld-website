@@ -878,7 +878,10 @@
                     </ul>
                 </div>
 
-                <a href="{{ route('careers') }}"
+                <a href="{{ route('persyaratan', [
+                    'jenis' => 'staff',
+                    'posisi' => 'Staff Kantor'
+                ]) }}"
                    class="mt-5 flex items-center justify-center rounded-lg bg-blue-50 px-4 py-2.5 text-[10px] font-bold text-blue-600 transition hover:bg-blue-600 hover:text-white">
                     Lamar Posisi Ini <span class="ml-2">→</span>
                 </a>
@@ -912,7 +915,10 @@
                     </ul>
                 </div>
 
-                <a href="{{ route('careers') }}"
+                <a href="{{ route('persyaratan', [
+                    'jenis' => 'staff',
+                    'posisi' => 'Staff Kantor'
+                ]) }}"
                    class="mt-5 flex items-center justify-center rounded-lg bg-blue-50 px-4 py-2.5 text-[10px] font-bold text-blue-600 transition hover:bg-blue-600 hover:text-white">
                     Lamar Posisi Ini <span class="ml-2">→</span>
                 </a>
@@ -946,7 +952,10 @@
                     </ul>
                 </div>
 
-                <a href="{{ route('careers') }}"
+                <a href="{{ route('persyaratan', [
+                    'jenis' => 'staff',
+                    'posisi' => 'Staff Kantor'
+                ]) }}"
                    class="mt-5 flex items-center justify-center rounded-lg bg-blue-50 px-4 py-2.5 text-[10px] font-bold text-blue-600 transition hover:bg-blue-600 hover:text-white">
                     Lamar Posisi Ini <span class="ml-2">→</span>
                 </a>
@@ -992,9 +1001,12 @@
                     </ul>
                 </div>
 
-                <a href="{{ route('internship') }}"
+                <a href="{{ route('persyaratan', [
+                    'jenis' => 'magang',
+                    'kategori' => 'Magang Mahasiswa'
+                ]) }}"
                    class="mt-5 flex items-center justify-center gap-2 rounded-lg bg-orange-50 px-4 py-2.5 text-[10px] font-bold text-orange-600 transition hover:bg-orange-500 hover:text-white">
-                    Informasi &amp; Pendaftaran <span>→</span>
+                    Informasi Pendaftaran <span>→</span>
                 </a>
             </article>
 
@@ -1027,9 +1039,12 @@
                     </ul>
                 </div>
 
-                <a href="{{ route('internship') }}"
+                <a href="{{ route('persyaratan', [
+                    'jenis' => 'magang',
+                    'kategori' => 'Magang Mahasiswa'
+                ]) }}"
                    class="mt-5 flex items-center justify-center gap-2 rounded-lg bg-blue-50 px-4 py-2.5 text-[10px] font-bold text-blue-600 transition hover:bg-blue-600 hover:text-white">
-                    Informasi &amp; Pendaftaran <span>→</span>
+                    Informasi Pendaftaran <span>→</span>
                 </a>
             </article>
 

@@ -431,7 +431,7 @@
         
             <a href="{{ route('careers') }}"
             class="inline-flex min-h-[42px] items-center justify-center rounded-lg border border-[#CBD5E1] bg-white px-5 py-2.5 text-sm font-semibold text-slate-600 shadow-sm transition hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700">
-                ← Kembali ke Karier
+                Kembali ke Karier
             </a>
 
             @if ($isStaff)

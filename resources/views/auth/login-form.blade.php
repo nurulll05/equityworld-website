@@ -1,9 +1,4 @@
-
-{{-- ==========================================
-     FORM LOGIN
-=========================================== --}}
-
-
+{{-- FORM LOGIN --}}
 <form
     id="loginForm"
     action="{{ route('auth.login') }}"
@@ -11,6 +6,22 @@
     class="space-y-4"
 >
     @csrf
+
+    {{-- KONTEKS LOGIN --}}
+    <input
+        type="hidden"
+        id="loginContext"
+        name="auth_context"
+        value="{{ session('auth_context', 'general') }}"
+    >
+    
+    @if ($errors->any())
+        <div class="rounded-lg border border-red-200 bg-red-50 px-3 py-3 text-xs text-red-700">
+            @foreach ($errors->all() as $error)
+                <p>{{ $error }}</p>
+            @endforeach
+        </div>
+    @endif
 
     {{-- JUDUL --}}
 
@@ -27,7 +38,6 @@
     </div>
 
     {{-- NOTIFIKASI REGISTRASI BERHASIL --}}
-
     @if(session('open_auth_modal') === 'login' && session('success'))
 
         <div class="mb-3 rounded-lg border border-green-200 bg-green-50 px-3 py-3 text-xs leading-5 text-green-700">
@@ -58,7 +68,6 @@
 
     @endif
 
-
     {{-- EMAIL --}}
 
     <div>
@@ -88,16 +97,14 @@
                 placeholder="Masukkan email Anda"
                 autocomplete="email"
                 required
-                class="h-10 w-full rounded-lg border border-slate-200 bg-slate-50 pl-10 pr-3 text-xs text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-orange-400 focus:bg-white focus:ring-2 focus:ring-orange-500/10"
+                class="h-10 w-full appearance-none !border-2 !border-solid !border-slate-500 rounded-lg bg-slate-50 pl-10 pr-3 text-xs text-slate-800 outline-none transition-all duration-200 placeholder:text-slate-400 focus:!border-blue-500 focus:bg-white focus:!ring-2 focus:!ring-blue-500/10"
             >
-
         </div>
 
     </div>
 
 
     {{-- PASSWORD --}}
-
     <div>
 
         <label
@@ -125,11 +132,10 @@
                 placeholder="Masukkan kata sandi"
                 autocomplete="current-password"
                 required
-                class="h-10 w-full rounded-lg border border-slate-200 bg-slate-50 pl-10 pr-10 text-xs text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-orange-400 focus:bg-white focus:ring-2 focus:ring-orange-500/10"
+                class="h-10 w-full appearance-none !border-2 !border-solid !border-slate-500 rounded-lg bg-slate-50 pl-10 pr-10 text-xs text-slate-800 outline-none transition-all duration-200 placeholder:text-slate-400 focus:!border-blue-500 focus:bg-white focus:!ring-2 focus:!ring-blue-500/10"
             >
 
             {{-- TOMBOL MATA TANPA KOTAK --}}
-
             <button
                 type="button"
                 class="absolute inset-y-0 right-3 flex appearance-none items-center border-0 bg-transparent p-0 text-slate-400 shadow-none outline-none transition hover:text-orange-500 focus:outline-none"
@@ -150,7 +156,6 @@
 
 
     {{-- INGAT SAYA DAN LUPA PASSWORD --}}
-
     <div class="flex items-center justify-between gap-2 pt-1">
 
         <label class="flex cursor-pointer items-center gap-2 text-xs text-slate-600">
@@ -175,21 +180,15 @@
 
     </div>
 
-
     {{-- TOMBOL LOGIN --}}
-
     <div class="pt-1">
 
         <button
             type="submit"
-            class="mx-auto flex h-10 w-full max-w-[230px] items-center justify-center gap-2 rounded-lg bg-[#101D35] px-5 text-xs font-bold tracking-wide text-white shadow-md shadow-slate-900/10 transition hover:bg-orange-500 hover:shadow-orange-500/20"
+            class="mx-auto flex h-10 w-full max-w-[230px] items-center justify-center gap-2 rounded-lg border border-[#263D60] bg-[#101D35] px-5 text-xs font-bold tracking-wide text-white shadow-md shadow-slate-900/10 transition-all duration-300 hover:border-blue-600 hover:bg-blue-700 hover:shadow-blue-900/20 active:scale-[0.98]"
         >
 
             LOGIN
-
-            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path d="M5 12h14m-6-6 6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
 
         </button>
 
@@ -211,19 +210,5 @@
         </button>
 
     </p>
-
-
-    {{-- FOOTER KEAMANAN --}}
-
-    <div class="mt-4 flex items-center justify-center gap-2 border-t border-slate-100 pt-4 pb-1 text-[10px] text-slate-400">
-
-        <svg class="h-3.5 w-3.5 shrink-0 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <rect x="4" y="9" width="16" height="12" rx="2" stroke-width="1.8"/>
-            <path d="M8 9V6a4 4 0 0 1 8 0v3" stroke-width="1.8"/>
-        </svg>
-
-        Data akun Anda terlindungi
-
-    </div>
 
 </form>
