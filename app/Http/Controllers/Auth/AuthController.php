@@ -110,10 +110,9 @@ class AuthController extends Controller
                         ->with('success', 'Selamat datang, ' . $user->name . '!');
                 }
 
-                // Login umum kembali ke halaman utama website
                 $request->session()->forget('url.intended');
 
-                return redirect()->route('home')
+                return redirect()->route('pelamar.dashboard')
                     ->with('success', 'Selamat datang, ' . $user->name . '!');
             }
 

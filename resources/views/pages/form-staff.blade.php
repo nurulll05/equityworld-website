@@ -66,8 +66,12 @@
 
             {{-- FORM --}}
             <form id="staff-personal-form"
-                  enctype="multipart/form-data"
-                  novalidate>
+            action="{{ route('applications.store') }}"
+            method="POST"
+            enctype="multipart/form-data"
+            novalidate>
+
+            @csrf
 
                 {{-- TAHAP 1: DATA PRIBADI --}}
                 <div id="step-1">
@@ -755,22 +759,26 @@ document.addEventListener('DOMContentLoaded', function () {
 
     });
 
-
     // ==========================================
-    // VALIDASI TAHAP 2
+    // VALIDASI DAN KIRIM LAMARAN KE DATABASE
     // ==========================================
 
     submitButton.addEventListener('click', function () {
 
-        if (!validateFields(step2)) return;
+        // 1. Pastikan seluruh dokumen tahap 2 sudah lengkap
+        if (!validateFields(step2)) {
+            return;
+        }
 
-        alert(
-            'Seluruh data pribadi dan dokumen persyaratan telah lengkap. ' +
-            'Formulir siap diproses.'
-        );
+        // 2. Cegah tombol diklik berulang kali
+        submitButton.disabled = true;
+        submitButton.textContent = 'Mengirim Lamaran...';
+
+        // 3. Kirim seluruh data formulir ke Laravel
+        form.requestSubmit();
 
     });
 
-});
+    });
 </script>
 @endpush
