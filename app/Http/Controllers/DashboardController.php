@@ -26,10 +26,9 @@ class DashboardController extends Controller
 
     public function hrd()
     {
-        return view('dashboards.placeholder', [
-            'dashboardTitle' => 'Dashboard HRD',
-            'dashboardDescription' => 'Halaman pengelolaan rekrutmen Equityworld Futures.'
-        ]);
+        $user = Auth::user();
+
+        return view('hrd.dashboard', compact('user'));
     }
 
 

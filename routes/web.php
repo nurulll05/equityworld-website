@@ -8,6 +8,7 @@ use App\Http\Controllers\NewsController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\DashboardController as PortalDashboardController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\JobApplicationController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\WebsiteManagementController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
@@ -183,6 +184,16 @@ Route::middleware(['auth', 'single.device', 'role:pelamar'])->group(function () 
     // FORM MAGANG
     Route::view('/form-magang', 'pages.form-magang')
         ->name('form.magang');
+
+});
+
+// PROSES PENYIMPANAN LAMARAN
+Route::middleware(['auth', 'single.device', 'role:pelamar'])->group(function () {
+
+    Route::post('/lamaran/kirim', [
+        JobApplicationController::class,
+        'store'
+    ])->name('applications.store');
 
 });
 
