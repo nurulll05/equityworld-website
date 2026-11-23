@@ -10,6 +10,8 @@ use App\Http\Controllers\DashboardController as PortalDashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\WebsiteManagementController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Support\Facades\URL;
 
 // HALAMAN UTAMA
 Route::get('/', [HomeController::class, 'index'])
@@ -183,3 +185,36 @@ Route::middleware(['auth', 'single.device', 'role:pelamar'])->group(function () 
         ->name('form.magang');
 
 });
+
+// Halaman informasi verifikasi email
+Route::get('/email/verify', function () {
+    return view('auth.verify-email');
+})->middleware('auth')->name('verification.notice');
+
+// Proses verifikasi email
+Route::get('/email/verify/{id}/{hash}', function (
+    EmailVerificationRequest $request
+) {
+    $request->fulfill();
+
+    return redirect()->route('home')
+        ->with('success', 'Email berhasil diverifikasi! Silakan login.');
+})->middleware(['auth', 'signed', 'throttle:6,1'])
+  ->name('verification.verify');
+
+// Kirim ulang email verifikasi
+Route::post('/email/verification-notification', function (
+    Request $request
+) {
+    if ($request->user()->hasVerifiedEmail()) {
+        return back()->with('success', 'Email sudah terverifikasi.');
+    }
+
+    $request->user()->sendEmailVerificationNotification();
+
+    return back()->with(
+        'success',
+        'Tautan verifikasi berhasil dikirim ulang.'
+    );
+})->middleware(['auth', 'throttle:6,1'])
+  ->name('verification.send');

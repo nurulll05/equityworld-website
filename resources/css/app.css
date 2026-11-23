@@ -1866,34 +1866,32 @@ body {
     }
 }
 
+
 /* SIDEBAR ADMIN */
 #adminSidebar {
     transform: translateX(-100%);
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease-in-out;
 }
 
 #adminSidebar.is-open {
     transform: translateX(0);
 }
 
-/* Desktop */
-@media (min-width: 768px) {
-    #adminSidebar {
-        transform: translateX(0);
-    }
+/* MAIN AREA: TIDAK BERGESER */
+#adminMain {
+    width: 100%;
+    min-height: 100vh;
+    margin-left: 0;
+}
 
-    #adminSidebar.is-closed {
-        transform: translateX(-100%);
-    }
+/* Sembunyikan scrollbar sidebar */
+.admin-sidebar-nav {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
 
-    #adminMain {
-        margin-left: 260px;
-        transition: margin-left 0.3s ease;
-    }
-
-    #adminMain.is-expanded {
-        margin-left: 0;
-    }
+.admin-sidebar-nav::-webkit-scrollbar {
+    display: none;
 }
 
 /* Sembunyikan scrollbar sidebar */

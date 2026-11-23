@@ -65,18 +65,16 @@ class AuthController extends Controller
             // Ambil data akun tanpa membuat sesi login baru.
             $user = User::where('email', $request->email)->first();
 
-            $sessionLifetime = (int) config('session.lifetime', 120);
-
-            $lastActivity = $user->active_session_last_activity
-                ? Carbon::parse($user->active_session_last_activity)
-                : null;
-
-            // Periksa apakah akun masih aktif di perangkat lain.
-            $deviceIsActive = $user->active_session_id
-                && $lastActivity
-                && $lastActivity->greaterThan(
-                    now()->subMinutes($sessionLifetime)
-                );
+            // Periksa status verifikasi email.
+            if (!$user->hasVerifiedEmail()) {
+                return redirect()->route('home')
+                    ->withErrors([
+                        'email' => 'Email kamu belum diverifikasi. Silakan periksa inbox atau folder spam untuk menemukan tautan verifikasi.'
+                    ])
+                    ->withInput($request->only('email'))
+                    ->with('open_auth_modal', 'login')
+                    ->with('auth_context', $authContext);
+            }
 
             if ($deviceIsActive) {
                 return redirect()->route('home')
@@ -187,7 +185,7 @@ class AuthController extends Controller
                 ->with('auth_context', $authContext);
         }
 
-        User::create([
+        $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
@@ -195,14 +193,16 @@ class AuthController extends Controller
             'role' => 'pelamar',
         ]);
 
-        // Tidak login otomatis setelah registrasi
+        // Kirim email verifikasi
+        $user->sendEmailVerificationNotification();
 
+        // Tidak login otomatis setelah registrasi
         return redirect()->route('home')
             ->with('open_auth_modal', 'login')
             ->with('auth_context', $authContext)
             ->with(
                 'success',
-                'Registrasi berhasil! Silakan login menggunakan akun yang baru dibuat.'
+                'Registrasi berhasil! Silakan periksa email kamu untuk melakukan verifikasi sebelum login.'
             );
     }
 
