@@ -171,8 +171,7 @@
         </label>
 
         <a
-            href="#"
-            onclick="event.preventDefault();"
+            href="{{ route('password.request') }}"
             class="text-xs font-semibold text-orange-500 transition hover:text-orange-600"
         >
             Lupa kata sandi?

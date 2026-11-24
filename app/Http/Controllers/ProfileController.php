@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Password;
 
 class ProfileController extends Controller
 {
@@ -85,6 +86,58 @@ class ProfileController extends Controller
 
         return redirect()
             ->route('pelamar.dashboard', ['tab' => 'profil'])
+            ->with('success', 'Password berhasil diperbarui.');
+    }
+ 
+    // MENAMPILKAN INFORMASI AKUN ADMIN
+    public function adminProfile()
+    {
+        return view('admin.profile.index', [
+            'user' => Auth::user()
+        ]);
+    }
+
+    // MENAMPILKAN HALAMAN GANTI PASSWORD ADMIN
+    public function adminPassword()
+    {
+        return view('admin.profile.password');
+    }
+
+    // PROSES GANTI PASSWORD ADMIN
+    public function updateAdminPassword(Request $request)
+    {
+        $validated = $request->validate([
+            'current_password' => [
+                'required',
+                'current_password',
+            ],
+
+            'password' => [
+                'required',
+                'confirmed',
+                Password::min(8)
+                    ->mixedCase()
+                    ->numbers()
+                    ->symbols(),
+            ],
+        ], [
+            'current_password.required' => 'Password lama wajib diisi.',
+            'current_password.current_password' => 'Password lama tidak sesuai.',
+            'password.required' => 'Password baru wajib diisi.',
+            'password.confirmed' => 'Konfirmasi password baru tidak cocok.',
+            'password.min' => 'Password minimal 8 karakter.',
+            'password.mixed' => 'Password harus memiliki huruf besar dan kecil.',
+            'password.numbers' => 'Password harus memiliki angka.',
+            'password.symbols' => 'Password harus memiliki simbol.',
+        ]);
+
+        $user = Auth::user();
+
+        $user->password = Hash::make($validated['password']);
+        $user->save();
+
+        return redirect()
+            ->route('admin.password')
             ->with('success', 'Password berhasil diperbarui.');
     }
 }

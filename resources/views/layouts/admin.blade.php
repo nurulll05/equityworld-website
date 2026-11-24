@@ -64,7 +64,8 @@
                 Dashboard Admin
             </a>
 
-            <a href="#" class="sidebar-link">
+            <a href="{{ route('admin.users.index') }}"
+            class="sidebar-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
                 <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="1.7"
                     stroke-linecap="round" stroke-linejoin="round">
@@ -141,58 +142,103 @@
 
         </nav>
         
-<!-- Profil Admin -->
-<div class="border-t border-slate-200 bg-white px-3 py-2">
+    <!-- PROFIL ADMIN -->
+    <div class="relative border-t border-slate-200 bg-white px-3 py-3">
 
-    <!-- Frame Profil -->
-    <div class="inline-flex w-fit max-w-full items-center gap-3 rounded-xl bg-slate-50 px-3 py-2.5">
+        <div class="relative">
 
-        <!-- Avatar -->
-        <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-blue-600 text-xs font-bold text-white">
-            AD
+            <!-- DROPDOWN MENU -->
+            <div id="adminProfileDropdown"
+                class="absolute bottom-full left-0 right-0 z-[60] mb-3 hidden rounded-xl border border-slate-200 bg-white p-2 text-slate-800 shadow-xl">
+
+                <!-- INFORMASI AKUN -->
+                <a href="{{ route('admin.profile') }}"
+                class="flex items-center gap-3 rounded-lg px-3 py-3 text-sm text-slate-700 transition hover:bg-slate-100">
+
+                    <svg class="h-5 w-5" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor"
+                        stroke-width="1.8">
+                        <circle cx="12" cy="8" r="4"/>
+                        <path d="M5 21a7 7 0 0 1 14 0"/>
+                    </svg>
+
+                    Informasi Akun
+                </a>
+
+                <!-- GANTI PASSWORD -->
+                <a href="{{ route('admin.password') }}"
+                class="flex items-center gap-3 rounded-lg px-3 py-3 text-sm text-slate-700 transition hover:bg-slate-100">
+
+                    <svg class="h-5 w-5" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor"
+                        stroke-width="1.8">
+                        <rect x="3" y="11" width="18" height="11" rx="2"/>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    </svg>
+
+                    Ganti Password
+                </a>
+
+                <div class="my-1 border-t border-slate-100"></div>
+              
+            <!-- LOGOUT -->
+            <form action="{{ route('logout') }}" method="POST" class="px-2 py-1">
+                @csrf
+
+                <button type="submit"
+                    class="mx-auto flex w-fit items-center justify-center gap-2 rounded-lg border-0 bg-red-50 px-5 py-2 text-xs font-semibold text-red-600 shadow-none transition hover:bg-red-100">
+
+                    <svg class="h-4 w-4" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                        <path d="M16 17l5-5-5-5"/>
+                        <path d="M21 12H9"/>
+                    </svg>
+
+                    Logout
+                </button>
+            </form>
+
+            </div>
+
+            <!-- FRAME PROFIL -->
+            <div class="flex w-full items-center gap-3 rounded-xl bg-slate-50 px-3 py-2.5">
+
+                <!-- AVATAR -->
+                <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-blue-600 text-xs font-bold text-white">
+                    {{ strtoupper(substr(Auth::user()->name, 0, 2)) }}
+                </div>
+
+                <!-- INFORMASI USER -->
+                <div class="min-w-0 flex-1">
+                    <p class="truncate text-xs font-semibold text-slate-800">
+                        {{ Auth::user()->name }}
+                    </p>
+
+                    <p class="mt-1 text-[10px] text-slate-500">
+                        {{ Auth::user()->is_super_admin ? 'Super Administrator' : strtoupper(Auth::user()->role) }}
+                    </p>
+                </div>
+
+                <!-- TOMBOL PENGATURAN -->
+                <button type="button"
+                        id="adminProfileToggle"
+                        aria-label="Pengaturan profil"
+                        aria-expanded="false"
+                        class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border-0 bg-transparent p-0 text-blue-600 shadow-none transition hover:bg-blue-50 hover:text-blue-700">
+
+                    <svg class="h-5 w-5" viewBox="0 0 24 24"
+                        fill="currentColor">
+                        <path d="M19.14 12.94a7.5 7.5 0 0 0 0-1.88l2.03-1.58-2-3.46-2.4.97a7.5 7.5 0 0 0-1.63-.94L14.78 3h-4l-.36 3.05a7.5 7.5 0 0 0-1.63.94l-2.4-.97-2 3.46 2.03 1.58a7.5 7.5 0 0 0 0 1.88l-2.03 1.58 2 3.46 2.4-.97a7.5 7.5 0 0 0 1.63.94L10.78 21h4l.36-3.05a7.5 7.5 0 0 0 1.63-.94l2.4.97 2-3.46-2.03-1.58ZM12.78 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Z"/>
+                    </svg>
+                </button>
+
+            </div>
         </div>
-
-        <!-- Informasi Admin -->
-        <div class="min-w-0 flex-1">
-            <p class="truncate text-xs font-semibold text-slate-800">
-                Administrator
-            </p>
-            <p class="mt-1 text-[10px] text-slate-500">
-                Super Administrator
-            </p>
-        </div>
-
-        <!-- Ikon Setting -->
-        <button type="button"
-                aria-label="Pengaturan profil"
-                class="flex h-8 w-8 shrink-0 items-center justify-center border-0 bg-transparent p-0 text-blue-600 shadow-none outline-none hover:bg-transparent hover:text-blue-700 focus:outline-none focus:ring-0">
-            <svg xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                viewBox="0 0 24 24"
-                fill="currentColor">
-
-                <g>
-                    <circle cx="12" cy="12" r="8.5"/>
-
-                    <g>
-                        <rect x="9" y="1" width="6" height="6" rx="1.8"/>
-                        <rect x="9" y="1" width="6" height="6" rx="1.8" transform="rotate(45 12 12)"/>
-                        <rect x="9" y="1" width="6" height="6" rx="1.8" transform="rotate(90 12 12)"/>
-                        <rect x="9" y="1" width="6" height="6" rx="1.8" transform="rotate(135 12 12)"/>
-                        <rect x="9" y="1" width="6" height="6" rx="1.8" transform="rotate(180 12 12)"/>
-                        <rect x="9" y="1" width="6" height="6" rx="1.8" transform="rotate(225 12 12)"/>
-                        <rect x="9" y="1" width="6" height="6" rx="1.8" transform="rotate(270 12 12)"/>
-                        <rect x="9" y="1" width="6" height="6" rx="1.8" transform="rotate(315 12 12)"/>
-                    </g>
-                </g>
-
-                <circle cx="12" cy="12" r="3.5" fill="#f8fafc"/>
-            </svg>
-        </button>
-
     </div>
-</div>
-
     </aside>
 
     <!-- MAIN AREA -->
@@ -262,44 +308,84 @@
 
     @stack('scripts')
 
-    <script>   
+    <script>
     document.addEventListener('DOMContentLoaded', function () {
+
+        // SIDEBAR
         const sidebar = document.getElementById('adminSidebar');
         const toggle = document.getElementById('sidebarToggle');
         const overlay = document.getElementById('sidebarOverlay');
 
-        function openSidebar() {
-            sidebar.classList.add('is-open');
-            overlay.classList.remove('hidden');
-            toggle.setAttribute('aria-expanded', 'true');
+        if (sidebar && toggle && overlay) {
+
+            function openSidebar() {
+                sidebar.style.transform = 'translateX(0)';
+                overlay.classList.remove('hidden');
+                toggle.setAttribute('aria-expanded', 'true');
+            }
+
+            function closeSidebar() {
+                sidebar.style.transform = 'translateX(-100%)';
+                overlay.classList.add('hidden');
+                toggle.setAttribute('aria-expanded', 'false');
+            }
+
+            // Kondisi awal
+            closeSidebar();
+
+            toggle.addEventListener('click', function () {
+                const isOpen = toggle.getAttribute('aria-expanded') === 'true';
+
+                if (isOpen) {
+                    closeSidebar();
+                } else {
+                    openSidebar();
+                }
+            });
+
+            overlay.addEventListener('click', closeSidebar);
+
+            document.addEventListener('keydown', function (event) {
+                if (event.key === 'Escape') {
+                    closeSidebar();
+                }
+            });
         }
 
-        function closeSidebar() {
-            sidebar.classList.remove('is-open');
-            overlay.classList.add('hidden');
-            toggle.setAttribute('aria-expanded', 'false');
+        // DROPDOWN PROFIL ADMIN
+        const profileToggle = document.getElementById('adminProfileToggle');
+        const profileDropdown = document.getElementById('adminProfileDropdown');
+
+        if (profileToggle && profileDropdown) {
+
+            profileToggle.addEventListener('click', function (event) {
+                event.stopPropagation();
+
+                const isOpen = !profileDropdown.classList.contains('hidden');
+
+                profileDropdown.classList.toggle('hidden', isOpen);
+                profileToggle.setAttribute('aria-expanded', String(!isOpen));
+            });
+
+            document.addEventListener('click', function (event) {
+                if (
+                    !profileDropdown.contains(event.target) &&
+                    !profileToggle.contains(event.target)
+                ) {
+                    profileDropdown.classList.add('hidden');
+                    profileToggle.setAttribute('aria-expanded', 'false');
+                }
+            });
+
+            document.addEventListener('keydown', function (event) {
+                if (event.key === 'Escape') {
+                    profileDropdown.classList.add('hidden');
+                    profileToggle.setAttribute('aria-expanded', 'false');
+                }
+            });
         }
 
-        // Kondisi awal: sidebar tertutup
-        closeSidebar();
-
-        toggle.addEventListener('click', function () {
-            if (sidebar.classList.contains('is-open')) {
-                closeSidebar();
-            } else {
-                openSidebar();
-            }
-        });
-
-        overlay.addEventListener('click', closeSidebar);
-
-        document.addEventListener('keydown', function (event) {
-            if (event.key === 'Escape') {
-                closeSidebar();
-            }
-        });
     });
     </script>
-
 </body>
 </html>

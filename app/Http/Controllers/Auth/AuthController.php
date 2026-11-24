@@ -65,16 +65,24 @@ class AuthController extends Controller
             // Ambil data akun tanpa membuat sesi login baru.
             $user = User::where('email', $request->email)->first();
 
-            // Periksa status verifikasi email.
-            if (!$user->hasVerifiedEmail()) {
+            // Periksa status akun.
+            if (!$user->is_active) {
                 return redirect()->route('home')
                     ->withErrors([
-                        'email' => 'Email kamu belum diverifikasi. Silakan periksa inbox atau folder spam untuk menemukan tautan verifikasi.'
+                        'email' => 'Akun kamu sedang dinonaktifkan. Silakan hubungi administrator.'
                     ])
                     ->withInput($request->only('email'))
                     ->with('open_auth_modal', 'login')
                     ->with('auth_context', $authContext);
             }
+
+            // Periksa apakah akun masih aktif di perangkat lain.
+            // Sesi dianggap tidak aktif jika tidak ada aktivitas selama 30 menit.
+            $deviceIsActive = $user->active_session_id
+                && $user->active_session_id !== $request->session()->getId()
+                && $user->active_session_last_activity
+                && Carbon::parse($user->active_session_last_activity)
+                    ->gt(now()->subMinutes(30));
 
             if ($deviceIsActive) {
                 return redirect()->route('home')
@@ -192,18 +200,14 @@ class AuthController extends Controller
             'role' => 'pelamar',
         ]);
 
-        // Kirim email verifikasi
-        $user->sendEmailVerificationNotification();
-
-        // Tidak login otomatis setelah registrasi
         return redirect()->route('home')
             ->with('open_auth_modal', 'login')
             ->with('auth_context', $authContext)
             ->with(
                 'success',
-                'Registrasi berhasil! Silakan periksa email kamu untuk melakukan verifikasi sebelum login.'
+                'Registrasi berhasil! Silakan login menggunakan akun yang telah dibuat.'
             );
-    }
+        }
 
     // 3. PROSES LOGOUT
     public function logout(Request $request)

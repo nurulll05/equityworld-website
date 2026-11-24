@@ -15,8 +15,45 @@ class SingleDeviceLogin
             $user = Auth::user();
             $sessionId = $request->session()->getId();
 
-            // Jika sesi tidak tercatat, wajib login kembali.
-            if (!$user->active_session_id) {
+            // Jika akun dinonaktifkan oleh Admin, paksa logout.
+            if (!$user->is_active) {
+                Auth::logout();
+
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+
+                return redirect()->route('home')
+                    ->with('error', 'Akun kamu telah dinonaktifkan. Silakan hubungi administrator.');
+            }
+
+            // Pastikan ID sesi tersedia dan cocok.
+            if (
+                !$user->active_session_id ||
+                !hash_equals($user->active_session_id, $sessionId)
+            ) {
+                Auth::logout();
+
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+
+                return redirect()->route('home')
+                    ->with('error', 'Akun Anda sedang aktif di perangkat lain atau sesi telah berakhir. Silakan login kembali.');
+            }
+
+            // Periksa batas tidak aktif selama 30 menit.
+            $lastActivity = $user->active_session_last_activity;
+
+            if (
+                !$lastActivity ||
+                $lastActivity->lte(now()->subMinutes(30))
+            ) {
+
+                // Hapus sesi aktif hanya jika masih milik perangkat ini.
+                if ($user->active_session_id === $sessionId) {
+                    $user->active_session_id = null;
+                    $user->active_session_last_activity = null;
+                    $user->save();
+                }
 
                 Auth::logout();
 
@@ -24,29 +61,10 @@ class SingleDeviceLogin
                 $request->session()->regenerateToken();
 
                 return redirect()->route('home')
-                    ->with('error',
-                        'Sesi Anda tidak valid. Silakan login kembali.'
-                    );
+                    ->with('error', 'Sesi kamu telah berakhir karena tidak ada aktivitas selama 30 menit. Silakan login kembali.');
             }
 
-            // Jika ID sesi berbeda, tolak perangkat tersebut.
-            if (!hash_equals(
-                $user->active_session_id,
-                $sessionId
-            )) {
-
-                Auth::logout();
-
-                $request->session()->invalidate();
-                $request->session()->regenerateToken();
-
-                return redirect()->route('home')
-                    ->with('error',
-                        'Akun Anda sedang aktif di perangkat lain. Silakan logout terlebih dahulu dari perangkat tersebut.'
-                    );
-            }
-
-            // Jika ID sesi cocok, perbarui aktivitas.
+            // Jika sesi masih aktif, perbarui waktu aktivitas.
             $user->active_session_last_activity = now();
             $user->save();
         }

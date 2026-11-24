@@ -11,8 +11,10 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\JobApplicationController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\WebsiteManagementController;
+use App\Http\Controllers\Admin\UserManagementController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Support\Facades\URL;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 
 // HALAMAN UTAMA
 Route::get('/', [HomeController::class, 'index'])
@@ -89,6 +91,7 @@ Route::get('/register', function (Request $request) {
 })->name('register');
 
 
+// LOGIN, REGISTRASI, DAN LUPA PASSWORD
 Route::middleware('guest')->group(function () {
 
     Route::post('/auth/login', [AuthController::class, 'login'])
@@ -97,13 +100,35 @@ Route::middleware('guest')->group(function () {
     Route::post('/auth/register', [AuthController::class, 'register'])
         ->name('auth.register');
 
+    // HALAMAN LUPA PASSWORD
+    Route::get('/forgot-password', [
+        ForgotPasswordController::class,
+        'showLinkRequestForm'
+    ])->name('password.request');
+
+    // PROSES KIRIM LINK RESET PASSWORD
+    Route::post('/forgot-password', [
+        ForgotPasswordController::class,
+        'sendResetLinkEmail'
+    ])->name('password.email');
+
+    // HALAMAN RESET PASSWORD
+    Route::get('/reset-password/{token}', [
+        ForgotPasswordController::class,
+        'showResetForm'
+    ])->name('password.reset');
+
+    // PROSES SIMPAN PASSWORD BARU
+    Route::post('/reset-password', [
+        ForgotPasswordController::class,
+        'reset'
+    ])->name('password.reset.update');
 });
 
 // LOGOUT
 Route::post('/logout', [AuthController::class, 'logout'])
     ->middleware('auth')
     ->name('logout');
-
 
 // DASHBOARD ADMIN
 Route::middleware(['auth', 'single.device', 'role:admin'])
@@ -116,8 +141,47 @@ Route::middleware(['auth', 'single.device', 'role:admin'])
             'index'
         ])->name('dashboard');
 
-        // WEBSITE MANAGEMENT / CMS
+        // PROFIL ADMIN
+        Route::get('/profile', [
+            ProfileController::class,
+            'adminProfile'
+        ])->name('profile');
 
+        // HALAMAN GANTI PASSWORD ADMIN
+        Route::get('/change-password', [
+            ProfileController::class,
+            'adminPassword'
+        ])->name('password');
+
+        // PROSES GANTI PASSWORD ADMIN
+        Route::put('/change-password', [
+            ProfileController::class,
+            'updateAdminPassword'
+        ])->name('password.update');
+
+        // USER MANAGEMENT
+        Route::get('/users', [
+            UserManagementController::class,
+            'index'
+        ])->name('users.index');
+
+        // TAMBAH USER
+        Route::get('/users/create', [
+            UserManagementController::class,
+            'create'
+        ])->name('users.create');
+
+        Route::post('/users', [
+            UserManagementController::class,
+            'store'
+        ])->name('users.store');
+
+        Route::patch('/users/{user}/status', [
+            UserManagementController::class,
+            'updateStatus'
+        ])->name('users.update-status');
+
+        // WEBSITE MANAGEMENT / CMS
         Route::prefix('website')
             ->name('website.')
             ->group(function () {
