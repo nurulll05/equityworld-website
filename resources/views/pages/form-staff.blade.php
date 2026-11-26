@@ -73,6 +73,8 @@
 
             @csrf
 
+            <input type="hidden" name="job_type" value="staff">
+
                 {{-- TAHAP 1: DATA PRIBADI --}}
                 <div id="step-1">
 
@@ -257,6 +259,70 @@
                             ></textarea>
                         </div>
 
+                        {{-- DOMISILI --}}
+                        <div>
+                            <label class="mb-2 block text-sm font-semibold text-slate-700">
+                                Domisili *
+                            </label>
+
+                            <input
+                                type="text"
+                                name="domisili"
+                                placeholder="Contoh: Surabaya"
+                                maxlength="100"
+                                required
+                                class="{{ $fieldClass }}"
+                            >
+                        </div>
+
+                        {{-- KETERSEDIAAN BEKERJA --}}
+                        <div>
+                            <label class="mb-2 block text-sm font-semibold text-slate-700">
+                                Ketersediaan Bekerja *
+                            </label>
+
+                            <input
+                                type="text"
+                                name="availability"
+                                placeholder="Contoh: Segera atau 1 bulan setelah diterima"
+                                maxlength="100"
+                                required
+                                class="{{ $fieldClass }}"
+                            >
+                        </div>
+
+                        {{-- PENDIDIKAN TERAKHIR --}}
+                        <div>
+                            <label class="mb-2 block text-sm font-semibold text-slate-700">
+                                Pendidikan Terakhir *
+                            </label>
+
+                            <input
+                                type="text"
+                                name="education"
+                                placeholder="Contoh: S1 Manajemen"
+                                maxlength="100"
+                                required
+                                class="{{ $fieldClass }}"
+                            >
+                        </div>
+
+                        {{-- ASAL UNIVERSITAS --}}
+                        <div>
+                            <label class="mb-2 block text-sm font-semibold text-slate-700">
+                                Asal Universitas / Institusi *
+                            </label>
+
+                            <input
+                                type="text"
+                                name="university"
+                                placeholder="Masukkan nama universitas atau institusi"
+                                maxlength="150"
+                                required
+                                class="{{ $fieldClass }}"
+                            >
+                        </div>
+
                     </div>
 
                     {{-- TOMBOL TAHAP 1 --}}
@@ -419,6 +485,28 @@
 
                     </div>
 
+                    {{-- PERSETUJUAN PELAMAR --}}
+                    <div class="mt-6 border-t border-slate-100 pt-5">
+
+                        <label class="flex cursor-pointer items-start gap-3 text-sm text-slate-600">
+
+                            <input
+                                type="checkbox"
+                                name="agreement"
+                                value="1"
+                                required
+                                class="mt-1"
+                            >
+
+                            <span>
+                                Saya menyatakan bahwa seluruh informasi dan dokumen
+                                yang saya berikan adalah benar dan dapat dipertanggungjawabkan.
+                            </span>
+
+                        </label>
+
+                    </div>
+
                     {{-- TOMBOL TAHAP 2 --}}
                     <div class="mt-4 flex items-center justify-between gap-3 border-t border-slate-100 pt-3">
 
@@ -502,7 +590,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 cv: 'Silakan unggah Curriculum Vitae (CV).',
                 ktp: 'Silakan unggah KTP.',
                 ijazah: 'Silakan unggah ijazah terakhir atau SKL.',
-                pas_foto: 'Silakan unggah pas foto terbaru.'
+                pas_foto: 'Silakan unggah pas foto terbaru.',
+                domisili: 'Domisili wajib diisi.',
+                availability: 'Ketersediaan bekerja wajib diisi.',
+                education: 'Pendidikan terakhir wajib diisi.',
+                university: 'Asal universitas atau institusi wajib diisi.',
+                agreement: 'Anda harus menyetujui pernyataan terlebih dahulu.',
             };
 
             return messages[field.name] || 'Bagian ini wajib diisi.';

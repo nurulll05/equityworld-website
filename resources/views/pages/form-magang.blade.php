@@ -67,9 +67,20 @@
             </div>
 
             {{-- FORM --}}
-            <form id="internship-form"
-                  enctype="multipart/form-data"
-                  novalidate>
+            <form
+                id="internship-form"
+                action="{{ route('applications.store') }}"
+                method="POST"
+                enctype="multipart/form-data"
+                novalidate
+            >
+                @csrf
+
+                <input
+                    type="hidden"
+                    name="job_type"
+                    value="internship"
+                >
 
                 {{-- TAHAP 1: DATA PRIBADI DAN PENDIDIKAN --}}
                 <div id="step-1">
@@ -252,6 +263,22 @@
                                 required
                                 class="{{ $fieldClass }} resize-y"
                             ></textarea>
+                        </div>
+
+                        {{-- DOMISILI --}}
+                        <div>
+                            <label class="mb-2 block text-sm font-semibold text-slate-700">
+                                Domisili *
+                            </label>
+
+                            <input
+                                type="text"
+                                name="domisili"
+                                placeholder="Contoh: Surabaya"
+                                maxlength="100"
+                                required
+                                class="{{ $fieldClass }}"
+                            >
                         </div>
 
                         {{-- JENJANG PENDIDIKAN --}}
@@ -535,6 +562,28 @@
 
                     </div>
 
+                    {{-- PERSETUJUAN PELAMAR --}}
+                    <div class="mt-6 border-t border-slate-100 pt-5">
+
+                        <label class="flex cursor-pointer items-start gap-3 text-sm text-slate-600">
+
+                            <input
+                                type="checkbox"
+                                name="agreement"
+                                value="1"
+                                required
+                                class="mt-1"
+                            >
+
+                            <span>
+                                Saya menyatakan bahwa seluruh informasi dan dokumen
+                                yang saya berikan adalah benar dan dapat dipertanggungjawabkan.
+                            </span>
+
+                        </label>
+
+                    </div>
+
                     {{-- TOMBOL TAHAP 2 --}}
                     <div class="mt-4 flex items-center justify-between gap-3 border-t border-slate-100 pt-3">
 
@@ -637,13 +686,8 @@ document.addEventListener('DOMContentLoaded', function () {
         if (field.validity.valueMissing) {
 
             const messages = {
-                nama: 'Nama lengkap wajib diisi.',
-                tempat_lahir: 'Tempat lahir wajib diisi.',
-                tanggal_lahir: 'Tanggal lahir wajib diisi.',
-                jenis_kelamin: 'Silakan pilih jenis kelamin.',
-                no_hp: 'Nomor HP atau WhatsApp wajib diisi.',
-                email: 'Alamat email wajib diisi.',
                 alamat: 'Alamat lengkap wajib diisi.',
+                domisili: 'Domisili wajib diisi.',
                 jenjang_pendidikan: 'Silakan pilih jenjang pendidikan.',
                 institusi: 'Asal sekolah atau perguruan tinggi wajib diisi.',
                 jurusan: 'Jurusan atau program studi wajib diisi.',
@@ -653,7 +697,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 cv: 'Silakan unggah Curriculum Vitae (CV).',
                 surat_pengantar: 'Silakan unggah surat pengantar sekolah atau kampus.',
                 identitas: 'Silakan unggah dokumen identitas diri.',
-                pas_foto: 'Silakan unggah pas foto terbaru.'
+                pas_foto: 'Silakan unggah pas foto terbaru.',
+                agreement: 'Anda harus menyetujui pernyataan terlebih dahulu.'
             };
 
             return messages[field.name] || 'Bagian ini wajib diisi.';
@@ -918,15 +963,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
     });
 
-    // KIRIM LAMARAN
+
+    // KIRIM LAMARAN KE LARAVEL
     submitButton.addEventListener('click', function () {
 
-        if (!validateFields(step2)) return;
+        // Periksa seluruh dokumen dan persetujuan
+        if (!validateFields(step2)) {
+            return;
+        }
 
-        alert(
-            'Data pribadi, pendidikan, dan dokumen persyaratan telah lengkap. ' +
-            'Formulir siap diproses.'
-        );
+        // Cegah pengiriman berulang
+        submitButton.disabled = true;
+        submitButton.textContent = 'Mengirim Lamaran...';
+
+        // Kirim seluruh formulir ke JobApplicationController
+        form.requestSubmit();
 
     });
 

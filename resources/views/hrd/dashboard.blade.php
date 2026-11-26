@@ -71,6 +71,14 @@
         'vacancy_name'
     ], $applicationColumns);
 
+    // Mendeteksi kolom jenis lamaran
+    $typeColumn = $firstColumn([
+        'job_type',
+        'application_type',
+        'type',
+        'jenis_lamaran'
+    ], $applicationColumns);
+
     $emailColumn = $firstColumn([
         'email',
         'applicant_email',
@@ -349,6 +357,21 @@
                 ? ($row->{$positionColumn} ?? 'Belum ditentukan')
                 : 'Belum ditentukan';
 
+            // Mengambil jenis lamaran
+            $rawType = $typeColumn
+                ? strtolower(trim((string) ($row->{$typeColumn} ?? '')))
+                : '';
+
+            if ($rawType === 'staff') {
+                $applicationType = 'Staff';
+            } elseif ($rawType === 'internship') {
+                $applicationType = 'Magang';
+            } else {
+                $applicationType = $rawType
+                    ? ucwords(str_replace('_', ' ', $rawType))
+                    : '-';
+            }
+
             $email = $emailColumn
                 ? ($row->{$emailColumn} ?? '-')
                 : '-';
@@ -371,8 +394,10 @@
                 $formattedDate = '-';
             }
 
+
             $applicantRows[] = [
                 'name' => $candidateName,
+                'type' => $applicationType,
                 'position' => $position,
                 'email' => $email,
                 'status' => $status,
@@ -1119,7 +1144,7 @@
         .applicant-table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 680px;
+            min-width: 760px;
         }
 
         .applicant-table th {
@@ -1818,6 +1843,7 @@
                         <thead>
                             <tr>
                                 <th>NAMA PELAMAR</th>
+                                <th>JENIS LAMARAN</th>
                                 <th>POSISI DILAMAR</th>
                                 <th>TANGGAL DAFTAR</th>
                                 <th>STATUS SELEKSI</th>
@@ -1828,39 +1854,49 @@
 
                             @forelse($applicantRows as $applicant)
 
-                                <tr class="applicant-row"
-                                    data-search="{{ strtolower($applicant['name'].' '.$applicant['email'].' '.$applicant['position'].' '.$applicant['status']['label']) }}">
 
-                                    <td>
-                                        <div class="applicant-name">
-                                            {{ $applicant['name'] }}
-                                        </div>
+                            <tr class="applicant-row"
+                                data-search="{{ strtolower($applicant['name'].' '.$applicant['email'].' '.$applicant['type'].' '.$applicant['position'].' '.$applicant['status']['label']) }}">
 
-                                        <span class="applicant-email">
-                                            {{ $applicant['email'] }}
-                                        </span>
-                                    </td>
+                                {{-- NAMA DAN EMAIL --}}
+                                <td>
+                                    <div class="applicant-name">
+                                        {{ $applicant['name'] }}
+                                    </div>
 
-                                    <td>
-                                        {{ $applicant['position'] }}
-                                    </td>
+                                    <span class="applicant-email">
+                                        {{ $applicant['email'] }}
+                                    </span>
+                                </td>
 
-                                    <td>
-                                        {{ $applicant['date'] }}
-                                    </td>
+                                {{-- JENIS LAMARAN --}}
+                                <td>
+                                    {{ $applicant['type'] }}
+                                </td>
 
-                                    <td>
-                                        <span class="status {{ $applicant['status']['class'] }}">
-                                            {{ $applicant['status']['label'] }}
-                                        </span>
-                                    </td>
+                                {{-- POSISI --}}
+                                <td>
+                                    {{ $applicant['position'] }}
+                                </td>
 
-                                </tr>
+                                {{-- TANGGAL DAFTAR --}}
+                                <td>
+                                    {{ $applicant['date'] }}
+                                </td>
 
-                            @empty
+                                {{-- STATUS SELEKSI --}}
+                                <td>
+                                    <span class="status {{ $applicant['status']['class'] }}">
+                                        {{ $applicant['status']['label'] }}
+                                    </span>
+                                </td>
+
+                            </tr>
+
+                        @empty
 
                                 <tr>
-                                    <td colspan="4" class="empty-table">
+                                    <td colspan="5" class="empty-table">
                                         Belum ada data lamaran yang dapat ditampilkan.
                                         <br>
                                         Pastikan tabel job_applications sudah berisi data.

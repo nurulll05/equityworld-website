@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
@@ -26,7 +25,12 @@ class DashboardController extends Controller
 
     public function hrd()
     {
+        // Mengambil data HRD yang sedang login
         $user = Auth::user();
+
+        // Menampilkan halaman Dashboard HRD
+        // Data lamaran dibaca melalui file:
+        // resources/views/hrd/dashboard.blade.php
 
         return view('hrd.dashboard', compact('user'));
     }
