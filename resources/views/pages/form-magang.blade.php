@@ -68,8 +68,17 @@
 
             {{-- FORM --}}
             <form id="internship-form"
-                  enctype="multipart/form-data"
-                  novalidate>
+                action="{{ route('applications.store') }}"
+                method="POST"
+                enctype="multipart/form-data"
+                novalidate>
+                @csrf
+
+                <input
+                    type="hidden"
+                    name="posisi"
+                     value="{{ request('posisi', request('position', 'Program Magang')) }}"
+                >
 
                 {{-- TAHAP 1: DATA PRIBADI DAN PENDIDIKAN --}}
                 <div id="step-1">
@@ -923,10 +932,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (!validateFields(step2)) return;
 
-        alert(
-            'Data pribadi, pendidikan, dan dokumen persyaratan telah lengkap. ' +
-            'Formulir siap diproses.'
-        );
+        submitButton.disabled = true;
+        submitButton.textContent = 'Mengirim Lamaran...';
+
+        form.requestSubmit();
 
     });
 

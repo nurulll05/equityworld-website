@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use Illuminate\Support\Carbon;
+use App\Models\JobApplication;
 
 class AuthController extends Controller
 {
@@ -111,14 +112,31 @@ class AuthController extends Controller
 
             if ($user->role === 'pelamar') {
 
+                // Periksa apakah pelamar masih memiliki lamaran aktif.
+                $activeApplication = JobApplication::where('user_id', $user->id)
+                    ->whereNotIn('status', ['ditolak', 'dibatalkan'])
+                    ->latest()
+                    ->first();
+
+                // Jika memiliki lamaran aktif, arahkan ke Status Lamaran.
+                if ($activeApplication) {
+                    $request->session()->forget('url.intended');
+
+                    return redirect()
+                        ->route('pelamar.dashboard', ['tab' => 'lamaran'])
+                        ->with('success', 'Selamat datang kembali, ' . $user->name . '!');
+                }
+
+                // Jika belum memiliki lamaran dan login melalui alur pendaftaran,
                 if ($authContext === 'application') {
                     return redirect()->intended(route('careers'))
                         ->with('success', 'Selamat datang, ' . $user->name . '!');
                 }
 
+                // Jika login biasa dan belum memiliki lamaran, arahkan ke Beranda.
                 $request->session()->forget('url.intended');
 
-                return redirect()->route('pelamar.dashboard')
+                return redirect()->route('home')
                     ->with('success', 'Selamat datang, ' . $user->name . '!');
             }
 

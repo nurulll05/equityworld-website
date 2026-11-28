@@ -13,8 +13,6 @@ class JobApplication extends Model
         'user_id',
         'job_type',
         'branch',
-
-        // DATA PRIBADI
         'full_name',
         'birth_place',
         'birth_date',
@@ -27,21 +25,25 @@ class JobApplication extends Model
         'availability',
         'education',
         'university',
-
-        // DOKUMEN LAMARAN
+        'internship_category',
+        'major',
+        'semester',
+        'internship_start_date',
+        'internship_end_date',
         'cv_path',
         'ktp_path',
         'transcript_path',
         'photo_path',
         'supporting_documents',
-
-        // STATUS LAMARAN
         'agreement',
         'status',
     ];
 
     protected $casts = [
         'birth_date' => 'date',
+        'internship_start_date' => 'date',
+        'internship_end_date' => 'date',
+        'semester' => 'integer',
         'supporting_documents' => 'array',
         'agreement' => 'boolean',
     ];

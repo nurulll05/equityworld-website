@@ -12,9 +12,11 @@ use App\Http\Controllers\JobApplicationController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\WebsiteManagementController;
 use App\Http\Controllers\Admin\UserManagementController;
+use App\Http\Controllers\Admin\RoleManagementController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Support\Facades\URL;
 use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Admin\ApplicantManagementController;
 
 // HALAMAN UTAMA
 Route::get('/', [HomeController::class, 'index'])
@@ -27,8 +29,18 @@ Route::view('/tentang-kami', 'pages.tentang-kami')
 Route::view('/legalitas', 'pages.legalitas')
     ->name('legality');
 
-Route::view('/karier', 'pages.karier')
-    ->name('careers');
+Route::get('/karier', function () {
+    $activeApplication = null;
+
+    if (auth()->check() && auth()->user()->role === 'pelamar') {
+        $activeApplication = \App\Models\JobApplication::where('user_id', auth()->id())
+            ->whereNotIn('status', ['ditolak', 'dibatalkan'])
+            ->latest()
+            ->first();
+    }
+
+    return view('pages.karier', compact('activeApplication'));
+})->name('careers');
 
 Route::view('/magang', 'pages.magang')
     ->name('internship');
@@ -136,54 +148,128 @@ Route::middleware(['auth', 'single.device', 'role:admin'])
     ->name('admin.')
     ->group(function () {
 
+        // DASHBOARD
         Route::get('/dashboard', [
             AdminDashboardController::class,
             'index'
-        ])->name('dashboard');
+        ])->middleware('permission:dashboard.view')
+          ->name('dashboard');
 
         // PROFIL ADMIN
         Route::get('/profile', [
             ProfileController::class,
             'adminProfile'
-        ])->name('profile');
+        ])->middleware('permission:profile.manage')
+          ->name('profile');
 
         // HALAMAN GANTI PASSWORD ADMIN
         Route::get('/change-password', [
             ProfileController::class,
             'adminPassword'
-        ])->name('password');
+        ])->middleware('permission:profile.manage')
+          ->name('password');
 
         // PROSES GANTI PASSWORD ADMIN
         Route::put('/change-password', [
             ProfileController::class,
             'updateAdminPassword'
-        ])->name('password.update');
+        ])->middleware('permission:profile.manage')
+          ->name('password.update');
 
         // USER MANAGEMENT
         Route::get('/users', [
             UserManagementController::class,
             'index'
-        ])->name('users.index');
+        ])->middleware('permission:users.view')
+          ->name('users.index');
 
         // TAMBAH USER
         Route::get('/users/create', [
             UserManagementController::class,
             'create'
-        ])->name('users.create');
+        ])->middleware('permission:users.create')
+          ->name('users.create');
 
         Route::post('/users', [
             UserManagementController::class,
             'store'
-        ])->name('users.store');
+        ])->middleware('permission:users.create')
+          ->name('users.store');
 
+        // UBAH STATUS USER
         Route::patch('/users/{user}/status', [
             UserManagementController::class,
             'updateStatus'
-        ])->name('users.update-status');
+        ])->middleware('permission:users.update-status')
+          ->name('users.update-status');
+
+        // DATA PELAMAR
+        Route::get('/applicants', [
+            ApplicantManagementController::class,
+            'index'
+        ])->middleware('permission:applications.view')
+        ->name('applicants.index');
+
+        // DETAIL PELAMAR (UNTUK MODAL)
+        Route::get('/applicants/{id}', [
+            ApplicantManagementController::class,
+            'show'
+        ])->middleware('permission:applications.view')
+        ->name('applicants.show');
+
+        // PRATINJAU DOKUMEN PELAMAR
+        Route::get('/applicants/{id}/documents/{document}', [
+            ApplicantManagementController::class,
+            'viewDocument'
+        ])->middleware('permission:applications.view')
+        ->name('applicants.documents.view');
+
+        // ROLE MANAGEMENT (RBAC)
+        Route::prefix('roles')
+            ->name('roles.')
+            ->middleware('permission:roles.view')
+            ->group(function () {
+
+                // DAFTAR ROLE
+                Route::get('/', [
+                    RoleManagementController::class,
+                    'index'
+                ])->name('index');
+
+                // FORM TAMBAH ROLE
+                Route::get('/create', [
+                    RoleManagementController::class,
+                    'create'
+                ])->middleware('permission:roles.manage')
+                  ->name('create');
+
+                // SIMPAN ROLE
+                Route::post('/', [
+                    RoleManagementController::class,
+                    'store'
+                ])->middleware('permission:roles.manage')
+                  ->name('store');
+
+                // FORM EDIT ROLE
+                Route::get('/{role}/edit', [
+                    RoleManagementController::class,
+                    'edit'
+                ])->middleware('permission:roles.manage')
+                  ->name('edit');
+
+                // UPDATE ROLE
+                Route::put('/{role}', [
+                    RoleManagementController::class,
+                    'update'
+                ])->middleware('permission:roles.manage')
+                  ->name('update');
+
+            });
 
         // WEBSITE MANAGEMENT / CMS
         Route::prefix('website')
             ->name('website.')
+            ->middleware('permission:website.manage')
             ->group(function () {
 
                 Route::get('/visual', [
@@ -204,6 +290,7 @@ Route::middleware(['auth', 'single.device', 'role:admin'])
             });
 
     });
+
 
 // DASHBOARD HRD
 Route::middleware(['auth', 'single.device', 'role:hrd'])
@@ -239,17 +326,41 @@ Route::middleware(['auth', 'single.device', 'role:pelamar'])
     });
 
 // FORMULIR LAMARAN PELAMAR
-Route::middleware(['auth', 'single.device', 'role:pelamar'])->group(function () {
+Route::middleware(['auth', 'single.device', 'role:pelamar'])
 
-    // FORM STAFF
-    Route::view('/form-staff', 'pages.form-staff')
-        ->name('form.staff');
+    ->group(function () {
 
-    // FORM MAGANG
-    Route::view('/form-magang', 'pages.form-magang')
-        ->name('form.magang');
+        // FORM STAFF
+        Route::get('/form-staff', function () {
+            $hasActiveApplication = \App\Models\JobApplication::where('user_id', auth()->id())
+                ->whereNotIn('status', ['ditolak', 'dibatalkan'])
+                ->exists();
 
-});
+            if ($hasActiveApplication) {
+                return redirect()
+                    ->route('pelamar.dashboard', ['tab' => 'lamaran'])
+                    ->with('info', 'Anda sudah memiliki lamaran aktif.');
+            }
+
+            return view('pages.form-staff');
+        })->name('form.staff');
+
+        // FORM MAGANG
+        Route::get('/form-magang', function () {
+            $hasActiveApplication = \App\Models\JobApplication::where('user_id', auth()->id())
+                ->whereNotIn('status', ['ditolak', 'dibatalkan'])
+                ->exists();
+
+            if ($hasActiveApplication) {
+                return redirect()
+                    ->route('pelamar.dashboard', ['tab' => 'lamaran'])
+                    ->with('info', 'Anda sudah memiliki lamaran aktif.');
+            }
+
+            return view('pages.form-magang');
+        })->name('form.magang');
+
+    });
 
 // PROSES PENYIMPANAN LAMARAN
 Route::middleware(['auth', 'single.device', 'role:pelamar'])->group(function () {

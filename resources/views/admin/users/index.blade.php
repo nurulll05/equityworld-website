@@ -8,18 +8,6 @@
 
     <div class="space-y-6">
 
-    @if (session('success'))
-        <div class="rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-xs text-green-700">
-            {{ session('success') }}
-        </div>
-    @endif
-
-    @if (session('error'))
-        <div class="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-xs text-red-700">
-            {{ session('error') }}
-        </div>
-    @endif
-
     <!-- HEADER -->
     <div class="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
         <div>

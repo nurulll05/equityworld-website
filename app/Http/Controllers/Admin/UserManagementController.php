@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Role;
 
 class UserManagementController extends Controller
 {
@@ -58,7 +59,6 @@ class UserManagementController extends Controller
         ));
     }
 
-
     // MENGUBAH STATUS AKUN
     public function updateStatus(Request $request, User $user)
     {
@@ -67,16 +67,40 @@ class UserManagementController extends Controller
         ]);
 
         $newStatus = $request->boolean('is_active');
+        $actor = Auth::user();
 
-        // Admin tidak boleh menonaktifkan akunnya sendiri
-        if ($user->id === Auth::id() && !$newStatus) {
+        // Pengguna tidak boleh menonaktifkan akun sendiri
+        if ($user->id === $actor->id && !$newStatus) {
             return back()->with(
                 'error',
                 'Kamu tidak dapat menonaktifkan akun sendiri.'
             );
         }
 
-        // Mencegah penonaktifan admin aktif terakhir
+        // Admin biasa tidak boleh mengubah status Super Admin
+        if ($user->is_super_admin && !$actor->is_super_admin) {
+            return back()->with(
+                'error',
+                'Hanya Super Admin yang dapat mengubah status akun Super Admin.'
+            );
+        }
+
+        // Mencegah penonaktifan Super Admin aktif terakhir
+        if (
+            $user->is_super_admin &&
+            $user->is_active &&
+            !$newStatus &&
+            User::where('is_super_admin', true)
+                ->where('is_active', true)
+                ->count() <= 1
+        ) {
+            return back()->with(
+                'error',
+                'Super Admin aktif terakhir tidak dapat dinonaktifkan.'
+            );
+        }
+
+        // Mencegah penonaktifan administrator aktif terakhir
         if (
             $user->role === 'admin' &&
             $user->is_active &&
@@ -108,13 +132,11 @@ class UserManagementController extends Controller
         );
     }
 
-
     // MENAMPILKAN FORM TAMBAH USER
     public function create()
     {
         return view('admin.users.create');
     }
-
 
     // MENYIMPAN USER BARU
     public function store(Request $request)
@@ -138,7 +160,11 @@ class UserManagementController extends Controller
             'password.confirmed' => 'Konfirmasi password tidak cocok.',
         ]);
 
-        User::create([
+        // Cari role yang dipilih
+        $role = Role::where('slug', $validated['role'])->firstOrFail();
+
+        // Buat akun pengguna
+        $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'phone' => $validated['phone'],
@@ -146,6 +172,9 @@ class UserManagementController extends Controller
             'password' => Hash::make($validated['password']),
             'is_active' => true,
         ]);
+
+        // Hubungkan pengguna dengan role melalui tabel role_user
+        $user->roles()->sync([$role->id]);
 
         return redirect()
             ->route('admin.users.index')

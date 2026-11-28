@@ -510,6 +510,35 @@
         </div>
     </header>
 
+    {{-- NOTIFIKASI BERHASIL --}}
+    @if (session('success'))
+        <div class="fixed left-1/2 top-24 z-[9999] w-[min(92vw,520px)] -translate-x-1/2 px-2">
+            <div id="success-notification"
+                role="status"
+                aria-live="polite"
+                class="flex items-center gap-3 rounded-xl border border-emerald-200 bg-white px-5 py-4 shadow-[0_10px_35px_rgba(15,23,42,0.15)] transition-all duration-500">
+
+                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="m5 12 4 4L19 6"
+                            stroke-width="2.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"/>
+                    </svg>
+                </div>
+
+                <div>
+                    <p class="text-sm font-bold text-slate-800">
+                        Berhasil!
+                    </p>
+                    <p class="mt-1 text-sm text-slate-600">
+                        {{ session('success') }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    @endif
+
     {{-- KONTEN UTAMA --}}
     <main id="main-content">
         @yield('content')
@@ -773,6 +802,22 @@
 
 </footer>
 @include('auth.popup')
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const notification = document.getElementById('success-notification');
+
+    if (!notification) return;
+
+    setTimeout(function () {
+        notification.classList.add('opacity-0', '-translate-y-2');
+
+        setTimeout(function () {
+            notification.remove();
+        }, 500);
+    }, 7000);
+});
+</script>
 
 @stack('scripts')
 

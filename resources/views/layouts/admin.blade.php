@@ -77,7 +77,9 @@
                 User Management
             </a>
 
-            <a href="#" class="sidebar-link">
+            <a href="{{ route('admin.roles.index') }}"
+                class="sidebar-link {{ request()->routeIs('admin.roles.*') ? 'active' : '' }}">
+
                 <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="1.7"
                     stroke-linecap="round" stroke-linejoin="round">
@@ -85,20 +87,26 @@
                     <path d="m3 12 9 5 9-5"/>
                     <path d="m3 16 9 5 9-5"/>
                 </svg>
+
                 Role Management (RBAC)
             </a>
 
-            <a href="#" class="sidebar-link">
-                <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="1.7"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                    <circle cx="10" cy="7" r="4"/>
-                    <path d="M20 8v6"/>
-                    <path d="M17 11h6"/>
-                </svg>
-                Data Pelamar (Staff & Magang)
-            </a>
+            @if(auth()->user()->hasPermission('applications.view'))
+                <a href="{{ route('admin.applicants.index') }}"
+                    class="sidebar-link {{ request()->routeIs('admin.applicants.*') ? 'active' : '' }}">
+
+                    <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="1.7"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="10" cy="7" r="4"/>
+                        <path d="M20 8v6"/>
+                        <path d="M17 11h6"/>
+                    </svg>
+
+                    Data Pelamar (Staff & Magang)
+                </a>
+            @endif
 
             <!-- Audit -->
             <p class="mb-3 mt-7 px-3 text-[9px] font-bold uppercase tracking-widest text-slate-500">
@@ -291,6 +299,48 @@
 
         </header>
 
+        <!-- TOAST NOTIFICATION -->
+        @if (session('success') || session('error'))
+            <div id="adminToast"
+                class="fixed left-1/2 top-5 z-[100] w-[calc(100%-2.5rem)] max-w-sm
+                    -translate-x-1/2 rounded-xl border p-4 shadow-xl
+                    flex items-start gap-3
+                    transition-all duration-300
+                    {{ session('success')
+                        ? 'border-green-200 bg-white text-green-700'
+                        : 'border-red-200 bg-white text-red-700' }}">
+
+                <!-- ICON -->
+                <div class="mt-0.5 shrink-0">
+                    @if (session('success'))
+                        <svg class="h-6 w-6" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                            <path d="m9 11 3 3L22 4"/>
+                        </svg>
+                    @else
+                        <svg class="h-6 w-6" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 8v4m0 4h.01"/>
+                        </svg>
+                    @endif
+                </div>
+
+                <!-- PESAN -->
+                <div class="min-w-0 flex-1">
+                    <p class="text-sm font-bold">
+                        {{ session('success') ? 'Berhasil' : 'Akses Ditolak' }}
+                    </p>
+
+                    <p class="mt-1 text-sm text-slate-600">
+                        {{ session('success') ?? session('error') }}
+                    </p>
+                </div>
+            </div>
+        @endif
 
         <!-- CONTENT -->
         <main class="p-4 md:p-6 lg:p-7">
@@ -308,84 +358,96 @@
 
     @stack('scripts')
 
-    <script>
-    document.addEventListener('DOMContentLoaded', function () {
+        <script>
+        document.addEventListener('DOMContentLoaded', function () {
 
-        // SIDEBAR
-        const sidebar = document.getElementById('adminSidebar');
-        const toggle = document.getElementById('sidebarToggle');
-        const overlay = document.getElementById('sidebarOverlay');
+            // TOAST NOTIFICATION
+            const adminToast = document.getElementById('adminToast');
 
-        if (sidebar && toggle && overlay) {
+            if (adminToast) {
+                setTimeout(() => {
+                    adminToast.classList.add('opacity-0', '-translate-y-3');
 
-            function openSidebar() {
-                sidebar.style.transform = 'translateX(0)';
-                overlay.classList.remove('hidden');
-                toggle.setAttribute('aria-expanded', 'true');
+                    setTimeout(() => {
+                        adminToast.remove();
+                    }, 300);
+                }, 4000);
             }
 
-            function closeSidebar() {
-                sidebar.style.transform = 'translateX(-100%)';
-                overlay.classList.add('hidden');
-                toggle.setAttribute('aria-expanded', 'false');
+            // SIDEBAR
+            const sidebar = document.getElementById('adminSidebar');
+            const toggle = document.getElementById('sidebarToggle');
+            const overlay = document.getElementById('sidebarOverlay');
+
+            if (sidebar && toggle && overlay) {
+
+                function openSidebar() {
+                    sidebar.style.transform = 'translateX(0)';
+                    overlay.classList.remove('hidden');
+                    toggle.setAttribute('aria-expanded', 'true');
+                }
+
+                function closeSidebar() {
+                    sidebar.style.transform = 'translateX(-100%)';
+                    overlay.classList.add('hidden');
+                    toggle.setAttribute('aria-expanded', 'false');
+                }
+
+                closeSidebar();
+
+                toggle.addEventListener('click', function () {
+                    const isOpen = toggle.getAttribute('aria-expanded') === 'true';
+
+                    if (isOpen) {
+                        closeSidebar();
+                    } else {
+                        openSidebar();
+                    }
+                });
+
+                overlay.addEventListener('click', closeSidebar);
+
+                document.addEventListener('keydown', function (event) {
+                    if (event.key === 'Escape') {
+                        closeSidebar();
+                    }
+                });
             }
 
-            // Kondisi awal
-            closeSidebar();
+            // DROPDOWN PROFIL ADMIN
+            const profileToggle = document.getElementById('adminProfileToggle');
+            const profileDropdown = document.getElementById('adminProfileDropdown');
 
-            toggle.addEventListener('click', function () {
-                const isOpen = toggle.getAttribute('aria-expanded') === 'true';
+            if (profileToggle && profileDropdown) {
 
-                if (isOpen) {
-                    closeSidebar();
-                } else {
-                    openSidebar();
-                }
-            });
+                profileToggle.addEventListener('click', function (event) {
+                    event.stopPropagation();
 
-            overlay.addEventListener('click', closeSidebar);
+                    const isOpen = !profileDropdown.classList.contains('hidden');
 
-            document.addEventListener('keydown', function (event) {
-                if (event.key === 'Escape') {
-                    closeSidebar();
-                }
-            });
-        }
+                    profileDropdown.classList.toggle('hidden', isOpen);
+                    profileToggle.setAttribute('aria-expanded', String(!isOpen));
+                });
 
-        // DROPDOWN PROFIL ADMIN
-        const profileToggle = document.getElementById('adminProfileToggle');
-        const profileDropdown = document.getElementById('adminProfileDropdown');
+                document.addEventListener('click', function (event) {
+                    if (
+                        !profileDropdown.contains(event.target) &&
+                        !profileToggle.contains(event.target)
+                    ) {
+                        profileDropdown.classList.add('hidden');
+                        profileToggle.setAttribute('aria-expanded', 'false');
+                    }
+                });
 
-        if (profileToggle && profileDropdown) {
+                document.addEventListener('keydown', function (event) {
+                    if (event.key === 'Escape') {
+                        profileDropdown.classList.add('hidden');
+                        profileToggle.setAttribute('aria-expanded', 'false');
+                    }
+                });
+            }
 
-            profileToggle.addEventListener('click', function (event) {
-                event.stopPropagation();
-
-                const isOpen = !profileDropdown.classList.contains('hidden');
-
-                profileDropdown.classList.toggle('hidden', isOpen);
-                profileToggle.setAttribute('aria-expanded', String(!isOpen));
-            });
-
-            document.addEventListener('click', function (event) {
-                if (
-                    !profileDropdown.contains(event.target) &&
-                    !profileToggle.contains(event.target)
-                ) {
-                    profileDropdown.classList.add('hidden');
-                    profileToggle.setAttribute('aria-expanded', 'false');
-                }
-            });
-
-            document.addEventListener('keydown', function (event) {
-                if (event.key === 'Escape') {
-                    profileDropdown.classList.add('hidden');
-                    profileToggle.setAttribute('aria-expanded', 'false');
-                }
-            });
-        }
-
-    });
-    </script>
-</body>
+        });
+        </script>
+    </body>
 </html>
