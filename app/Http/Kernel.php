@@ -69,5 +69,6 @@ class Kernel extends HttpKernel
 
         // MIDDLEWARE ROLE
         'role' => \App\Http\Middleware\RoleMiddleware::class,
+        'permission' => \App\Http\Middleware\PermissionMiddleware::class,
     ];
 }

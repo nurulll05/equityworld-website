@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\JobApplication;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use App\Models\JobApplication;
 use Throwable;
 
 class JobApplicationController extends Controller
@@ -46,9 +46,37 @@ class JobApplicationController extends Controller
 
     public function store(Request $request)
     {
-        $jobType = $request->input('job_type');
+        $userId = Auth::id();
 
+        // ==========================================
+        // CEGAH PELAMAR MENGIRIM LAMARAN AKTIF
+        // ==========================================
+
+        $hasActiveApplication = JobApplication::where(
+            'user_id',
+            $userId
+        )
+        ->whereNotIn('status', [
+            'ditolak',
+            'dibatalkan'
+        ])
+        ->exists();
+
+        if ($hasActiveApplication) {
+            return redirect()
+                ->route('pelamar.dashboard', ['tab' => 'lamaran'])
+                ->with(
+                    'info',
+                    'Anda masih memiliki lamaran aktif. Pantau status lamaran Anda melalui dashboard.'
+                );
+        }
+
+
+        // ==========================================
         // VALIDASI DATA UMUM
+        // ==========================================
+
+        $jobType = $request->input('job_type');
 
         $rules = [
 
@@ -75,6 +103,8 @@ class JobApplicationController extends Controller
 
             'alamat' => 'required|string|max:1000',
 
+            'agreement' => 'accepted',
+
             'cv' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
 
             'pas_foto' => 'required|image|mimes:jpg,jpeg,png|max:5120',
@@ -84,30 +114,43 @@ class JobApplicationController extends Controller
             'dokumen_pendukung.*' =>
                 'file|mimes:pdf,jpg,jpeg,png|max:5120',
 
-            'agreement' => 'accepted',
-
         ];
 
 
         // ==========================================
-        // VALIDASI KHUSUS STAFF
+        // VALIDASI KHUSUS MAGANG
         // ==========================================
 
-        if ($jobType === 'staff') {
+        if ($jobType === 'internship') {
 
             $rules = array_merge($rules, [
 
-                'posisi' => 'required|string|max:150',
+                'kategori' =>
+                    'required|in:Magang SMA/SMK,Magang Mahasiswa',
 
-                'availability' => 'required|string|max:100',
+                'jenjang_pendidikan' =>
+                    'required|string|max:100',
 
-                'education' => 'required|string|max:100',
+                'institusi' =>
+                    'required|string|max:150',
 
-                'university' => 'required|string|max:150',
+                'jurusan' =>
+                    'required|string|max:100',
 
-                'ktp' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
+                'semester' =>
+                    'required_if:kategori,Magang Mahasiswa|nullable|integer|min:1|max:8',
 
-                'ijazah' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
+                'tanggal_mulai' =>
+                    'required|date|after_or_equal:today',
+
+                'tanggal_selesai' =>
+                    'required|date|after_or_equal:tanggal_mulai',
+
+                'identitas' =>
+                    'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
+
+                'surat_pengantar' =>
+                    'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
 
             ]);
 
@@ -115,33 +158,29 @@ class JobApplicationController extends Controller
 
 
         // ==========================================
-        // VALIDASI KHUSUS MAGANG
+        // VALIDASI KHUSUS STAFF
         // ==========================================
 
-        elseif ($jobType === 'internship') {
+        elseif ($jobType === 'staff') {
 
             $rules = array_merge($rules, [
 
-                'kategori' => 'required|in:Magang SMA/SMK,Magang Mahasiswa',
+                'posisi' =>
+                    'required|string|max:150',
 
-                'jenjang_pendidikan' => 'required|string|max:100',
+                'availability' =>
+                    'required|string|max:100',
 
-                'institusi' => 'required|string|max:150',
+                'education' =>
+                    'required|string|max:100',
 
-                'jurusan' => 'required|string|max:100',
+                'university' =>
+                    'required|string|max:150',
 
-                'semester' =>
-                    'required_if:kategori,Magang Mahasiswa|nullable|integer|min:1|max:8',
-
-                'tanggal_mulai' => 'required|date|after_or_equal:today',
-
-                'tanggal_selesai' =>
-                    'required|date|after_or_equal:tanggal_mulai',
-
-                'surat_pengantar' =>
+                'ktp' =>
                     'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
 
-                'identitas' =>
+                'ijazah' =>
                     'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
 
             ]);
@@ -158,29 +197,23 @@ class JobApplicationController extends Controller
         // MENENTUKAN DATA BERDASARKAN JENIS LAMARAN
         // ==========================================
 
-        if ($jobType === 'staff') {
+        $category = null;
 
-            $position = $validated['posisi'];
+        $major = null;
 
-            $availability = $validated['availability'];
+        $semester = null;
 
-            $education = $validated['education'];
+        $internshipStart = null;
 
-            $university = $validated['university'];
+        $internshipEnd = null;
 
-            $major = null;
 
-            $semester = null;
+        if ($jobType === 'internship') {
 
-            $internshipStart = null;
+            $category = $validated['kategori'];
 
-            $internshipEnd = null;
-
-            $duplicateField = 'posisi';
-
-        } else {
-
-            $position = $validated['kategori'];
+            // Kategori magang disimpan sebagai posisi
+            $position = $category;
 
             $availability =
                 'Periode Magang: ' .
@@ -200,31 +233,15 @@ class JobApplicationController extends Controller
 
             $internshipEnd = $validated['tanggal_selesai'];
 
-            $duplicateField = 'kategori';
+        } else {
 
-        }
+            $position = $validated['posisi'];
 
+            $availability = $validated['availability'];
 
-        // ==========================================
-        // CEGAH LAMARAN GANDA
-        // ==========================================
+            $education = $validated['education'];
 
-        $alreadyApplied = JobApplication::where(
-            'user_id',
-            Auth::id()
-        )
-        ->where('job_type', $jobType)
-        ->where('position', $position)
-        ->exists();
-
-        if ($alreadyApplied) {
-
-            return back()
-                ->withErrors([
-                    $duplicateField =>
-                        'Anda sudah pernah mengirim lamaran untuk posisi ini.'
-                ])
-                ->withInput();
+            $university = $validated['university'];
 
         }
 
@@ -237,6 +254,7 @@ class JobApplicationController extends Controller
 
         try {
 
+            // Helper penyimpanan dokumen
             $storeFile = function ($file, $directory) use (&$storedFiles) {
 
                 $path = $file->store($directory, 'local');
@@ -250,11 +268,12 @@ class JobApplicationController extends Controller
                 $storedFiles[] = $path;
 
                 return $path;
-
             };
 
 
-            // CV DAN PAS FOTO
+            // ==========================================
+            // DOKUMEN UTAMA
+            // ==========================================
 
             $cvPath = $storeFile(
                 $request->file('cv'),
@@ -267,7 +286,18 @@ class JobApplicationController extends Controller
             );
 
 
-            // DOKUMEN KHUSUS STAFF / MAGANG
+            // ==========================================
+            // DOKUMEN KHUSUS STAFF DAN MAGANG
+            // ==========================================
+
+            $ktpPath = null;
+
+            $transcriptPath = null;
+
+            $identityPath = null;
+
+            $coverLetterPath = null;
+
 
             if ($jobType === 'staff') {
 
@@ -281,15 +311,7 @@ class JobApplicationController extends Controller
                     'applications/transcripts'
                 );
 
-                $identityPath = null;
-
-                $coverLetterPath = null;
-
             } else {
-
-                $ktpPath = null;
-
-                $transcriptPath = null;
 
                 $identityPath = $storeFile(
                     $request->file('identitas'),
@@ -304,7 +326,9 @@ class JobApplicationController extends Controller
             }
 
 
+            // ==========================================
             // DOKUMEN PENDUKUNG OPSIONAL
+            // ==========================================
 
             $supportingDocuments = [];
 
@@ -322,14 +346,16 @@ class JobApplicationController extends Controller
 
 
             // ==========================================
-            // SIMPAN DATA KE MYSQL
+            // SIMPAN DATA KE MYSQL ENZONIC
             // ==========================================
 
             $application = DB::transaction(function () use (
 
+                $userId,
                 $validated,
                 $jobType,
                 $position,
+                $category,
                 $availability,
                 $education,
                 $university,
@@ -349,12 +375,21 @@ class JobApplicationController extends Controller
 
                 $application = new JobApplication();
 
-                $application->user_id = Auth::id();
+                // RELASI AKUN PELAMAR
+                $application->user_id = $userId;
 
+                // INFORMASI LAMARAN
                 $application->job_type = $jobType;
 
                 $application->branch = self::DEFAULT_BRANCH;
 
+                $application->position = $position;
+
+                $application->internship_category = $category;
+
+                $application->availability = $availability;
+
+                // DATA PRIBADI
                 $application->full_name = $validated['nama'];
 
                 $application->birth_place =
@@ -378,10 +413,7 @@ class JobApplicationController extends Controller
                 $application->address =
                     $validated['alamat'];
 
-                $application->position = $position;
-
-                $application->availability = $availability;
-
+                // DATA PENDIDIKAN
                 $application->education = $education;
 
                 $application->university = $university;
@@ -390,12 +422,14 @@ class JobApplicationController extends Controller
 
                 $application->semester = $semester;
 
+                // PERIODE MAGANG
                 $application->internship_start_date =
                     $internshipStart;
 
                 $application->internship_end_date =
                     $internshipEnd;
 
+                // DOKUMEN LAMARAN
                 $application->cv_path = $cvPath;
 
                 $application->ktp_path = $ktpPath;
@@ -414,6 +448,7 @@ class JobApplicationController extends Controller
                 $application->supporting_documents =
                     $supportingDocuments;
 
+                // PERSETUJUAN DAN STATUS
                 $application->agreement = true;
 
                 $application->status = 'submitted';
@@ -430,15 +465,16 @@ class JobApplicationController extends Controller
             // ==========================================
 
             return redirect()
-                ->route('pelamar.dashboard')
+                ->route('pelamar.dashboard', ['tab' => 'lamaran'])
                 ->with(
                     'success',
                     'Lamaran berhasil dikirim dan tersimpan. Silakan pantau status lamaran Anda.'
                 );
 
+
         } catch (Throwable $exception) {
 
-            // HAPUS FILE JIKA PENYIMPANAN DATABASE GAGAL
+            // HAPUS DOKUMEN JIKA PENYIMPANAN GAGAL
 
             Storage::disk('local')->delete($storedFiles);
 
@@ -452,6 +488,5 @@ class JobApplicationController extends Controller
                 );
 
         }
-
     }
 }

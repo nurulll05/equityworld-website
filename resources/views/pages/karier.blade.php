@@ -87,117 +87,114 @@
                     Temukan peluang karier dan posisi yang sesuai dengan kemampuan Anda.
                 </p>
             </div>
-
+    
     {{-- GRID CARD STAFF --}}
     <div class="grid grid-cols-1 items-stretch gap-6 md:grid-cols-2 lg:grid-cols-3">
 
-        {{-- CARD STAFF KANTOR --}}
-        <article class="flex h-full min-w-0 flex-col rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-slate-300 hover:shadow-md">
-            <span class="inline-flex w-fit rounded-full bg-blue-50 px-4 py-2 text-xs font-bold text-blue-600">
-                Full-time
-            </span>
+        @php
+            $staffPositions = [
+                [
+                    'name' => 'OB (Office Boy)',
+                    'description' => 'Mendukung kebersihan dan kerapian lingkungan kantor agar aktivitas operasional perusahaan berjalan dengan nyaman.',
+                    'qualifications' => [
+                        'Pendidikan minimal SMA/SMK',
+                        'Teliti dan bertanggung jawab',
+                        'Disiplin dalam bekerja',
+                    ],
+                ],
+                [
+                    'name' => 'Resepsionis',
+                    'description' => 'Menyambut tamu, memberikan informasi awal, serta membantu kelancaran komunikasi dan pelayanan di lingkungan kantor.',
+                    'qualifications' => [
+                        'Pendidikan minimal SMA/SMK',
+                        'Memiliki kemampuan komunikasi yang baik',
+                        'Berpenampilan rapi dan ramah',
+                    ],
+                ],
+                [
+                    'name' => 'Asisten WPB (Wakil Pialang Berjangka)',
+                    'description' => 'Mendukung kegiatan administrasi dan operasional yang berkaitan dengan aktivitas kerja WPB.',
+                    'qualifications' => [
+                        'Pendidikan minimal SMA/SMK',
+                        'Mampu mengoperasikan komputer',
+                        'Teliti dan memiliki kemampuan administrasi',
+                    ],
+                ],
+                [
+                    'name' => 'Driver',
+                    'description' => 'Mendukung kebutuhan transportasi dan operasional perusahaan dengan mengutamakan keselamatan, ketepatan waktu, serta pelayanan profesional.',
+                    'qualifications' => [
+                        'Memiliki SIM A aktif',
+                        'Teliti dan bertanggung jawab',
+                        'Memiliki pengalaman mengemudi',
+                    ],
+                ],
+                [
+                    'name' => 'Staff',
+                    'description' => 'Mendukung kegiatan operasional dan administrasi perusahaan serta menjalankan tanggung jawab sesuai kebutuhan divisi.',
+                    'qualifications' => [
+                        'Pendidikan minimal SMA',
+                        'Memiliki komunikasi yang baik',
+                        'Berorientasi pada target',
+                    ],
+                ],
+            ];
+        @endphp
 
-            <h3 class="mt-6 text-lg font-extrabold text-slate-900">
-                Staff Kantor
-            </h3>
+        @foreach ($staffPositions as $position)
+            <article class="flex h-full min-w-0 flex-col rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-slate-300 hover:shadow-md">
 
-            <p class="mt-3 text-xs leading-relaxed text-justify text-slate-500">
-                Membangun hubungan profesional dengan calon nasabah,
-                memberikan konsultasi strategi transaksi, serta analisis
-                pasar komoditi.
-            </p>
+                <span class="inline-flex w-fit rounded-full bg-blue-50 px-4 py-2 text-xs font-bold text-blue-600">
+                    Full-time
+                </span>
 
-            <h4 class="mt-7 text-xs font-extrabold uppercase text-slate-900">
-                Kualifikasi Utama:
-            </h4>
+                <h3 class="mt-6 text-lg font-extrabold text-slate-900">
+                    {{ $position['name'] }}
+                </h3>
 
-            <ul class="mt-3 space-y-2 text-xs leading-relaxed text-slate-600">
-                <li> Pendidikan minimal SMA</li>
-                <li> Memiliki komunikasi yang baik</li>
-                <li> Berorientasi pada target</li>
-            </ul>
+                <p class="mt-3 text-xs leading-relaxed text-justify text-slate-500">
+                    {{ $position['description'] }}
+                </p>
 
-            <a href="{{ route('persyaratan', [
-                'jenis' => 'staff',
-                'posisi' => 'Staff Kantor'
-                ]) }}"
-                class="mt-6 flex min-h-[42px] items-center justify-center gap-2 rounded-lg bg-blue-50 px-3 py-2 text-xs font-bold text-blue-600 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:bg-blue-600 hover:text-white hover:shadow-lg hover:shadow-blue-600/30">
-                Lamar Posisi Ini
-                <span aria-hidden="true">→</span>
-            </a>
-        </article>
+                <h4 class="mt-7 text-xs font-extrabold uppercase text-slate-900">
+                    Kualifikasi Utama:
+                </h4>
 
-        {{-- CARD BUSINESS CONSULTANT --}}
-        <article class="flex h-full min-w-0 flex-col rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-slate-300 hover:shadow-md">
-            <span class="inline-flex w-fit rounded-full bg-blue-50 px-4 py-2 text-xs font-bold text-blue-600">
-                Full-time
-            </span>
+                <ul class="mt-3 space-y-2 text-xs leading-relaxed text-slate-600">
+                    @foreach ($position['qualifications'] as $qualification)
+                        <li>{{ $qualification }}</li>
+                    @endforeach
+                </ul>
 
-            <h3 class="mt-6 text-lg font-extrabold text-slate-900">
-                Business Consultant
-            </h3>
+                @if($activeApplication)
+                        @if(
+                            $activeApplication->job_type === 'staff' &&
+                            $activeApplication->position === $position['name']
+                        )
+                            <a href="{{ route('pelamar.dashboard', ['tab' => 'lamaran']) }}"
+                                class="mt-6 flex min-h-[42px] items-center justify-center gap-2 rounded-lg bg-emerald-50 px-3 py-2 text-xs font-bold text-emerald-700">
+                                <span>✓</span>
+                                Sudah Dilamar
+                            </a>
+                        @else
+                            <div class="mt-6 flex min-h-[42px] items-center justify-center gap-2 rounded-lg bg-red-50 px-3 py-2 text-xs font-bold text-red-600">
+                                <span>🔒</span>
+                                Pendaftaran Terkunci
+                            </div>
+                        @endif
+                    @else
+                    <a href="{{ route('persyaratan', [
+                        'jenis' => 'staff',
+                        'posisi' => $position['name']
+                    ]) }}"
+                        class="mt-6 flex min-h-[42px] items-center justify-center gap-2 rounded-lg bg-blue-50 px-3 py-2 text-xs font-bold text-blue-600 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:bg-blue-600 hover:text-white hover:shadow-lg hover:shadow-blue-600/30">
+                        Lamar Posisi Ini
+                        <span aria-hidden="true">→</span>
+                    </a>
+                @endif
 
-            <p class="mt-3 text-xs leading-relaxed text-justify text-slate-500">
-                Program pengembangan profesional untuk membangun kemampuan
-                konsultasi, komunikasi bisnis, dan pengembangan hubungan
-                dengan nasabah.
-            </p>
-
-            <h4 class="mt-7 text-xs font-extrabold uppercase text-slate-900">
-                Kualifikasi Utama:
-            </h4>
-
-            <ul class="mt-3 space-y-2 text-xs leading-relaxed text-slate-600">
-                <li> Fresh graduate dipersilakan</li>
-                <li> Disiplin dan jujur</li>
-                <li> Memiliki kemampuan komunikasi</li>
-            </ul>
-
-            <a href="{{ route('persyaratan', [
-                    'jenis' => 'staff',
-                    'posisi' => 'Business Consultant'
-                ]) }}"
-                class="mt-6 flex min-h-[42px] items-center justify-center gap-2 rounded-lg bg-blue-50 px-3 py-2 text-xs font-bold text-blue-600 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:bg-blue-600 hover:text-white hover:shadow-lg hover:shadow-blue-600/30">
-                Lamar Posisi Ini
-                <span aria-hidden="true">→</span>
-            </a>
-        </article>
-
-        {{-- CARD DRIVER --}}
-        <article class="flex h-full min-w-0 flex-col rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-slate-300 hover:shadow-md">
-            <span class="inline-flex w-fit rounded-full bg-blue-50 px-4 py-2 text-xs font-bold text-blue-600">
-                Full-time
-            </span>
-
-            <h3 class="mt-6 text-lg font-extrabold text-slate-900">
-                Driver
-            </h3>
-
-            <p class="mt-3 text-xs leading-relaxed text-justify text-slate-500">
-                Mendukung kebutuhan transportasi dan operasional perusahaan
-                dengan mengutamakan keselamatan, ketepatan waktu, serta
-                pelayanan profesional.
-            </p>
-
-            <h4 class="mt-7 text-xs font-extrabold uppercase text-slate-900">
-                Kualifikasi Utama:
-            </h4>
-
-            <ul class="mt-3 space-y-2 text-xs leading-relaxed text-slate-600">
-                <li> Memiliki SIM A aktif</li>
-                <li> Teliti dan bertanggung jawab</li>
-                <li> Memiliki pengalaman mengemudi</li>
-            </ul>
-
-            <a href="{{ route('persyaratan', [
-                    'jenis' => 'staff',
-                    'posisi' => 'Driver'
-                ]) }}"
-                class="mt-6 flex min-h-[42px] items-center justify-center gap-2 rounded-lg bg-blue-50 px-3 py-2 text-xs font-bold text-blue-600 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:bg-blue-600 hover:text-white hover:shadow-lg hover:shadow-blue-600/30">
-                Lamar Posisi Ini
-                <span aria-hidden="true">→</span>
-            </a>
-        </article>
+            </article>
+        @endforeach
 
     </div>
 </div>
@@ -240,16 +237,34 @@
                         <li>Disiplin dan bertanggung jawab</li>
                     </ul>
 
-                    <a
-                        href="{{ route('persyaratan', [
-                            'jenis' => 'magang',
-                            'kategori' => 'Magang SMA/SMK'
-                        ]) }}"
-                        class="mt-8 flex min-h-[40px] items-center justify-center gap-2 rounded-lg bg-orange-50 px-3 py-2 text-xs font-bold text-orange-600 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:bg-orange-500 hover:text-white hover:shadow-lg hover:shadow-orange-500/30"
-                    >
-                        Daftar Sekarang
-                        <span aria-hidden="true">→</span>
-                    </a>
+                    @if($activeApplication)
+                        @if(
+                            $activeApplication->job_type === 'internship' &&
+                            $activeApplication->internship_category === 'Magang SMA/SMK'
+                        )
+                            <a href="{{ route('pelamar.dashboard', ['tab' => 'lamaran']) }}"
+                                class="mt-8 flex min-h-[40px] items-center justify-center gap-2 rounded-lg bg-emerald-50 px-3 py-2 text-xs font-bold text-emerald-700">
+                                <span>✓</span>
+                                Sudah Dilamar
+                            </a>
+                        @else
+                            <div class="mt-8 flex min-h-[40px] items-center justify-center gap-2 rounded-lg bg-red-50 px-3 py-2 text-xs font-bold text-red-600">
+                                <span>🔒</span>
+                                Pendaftaran Terkunci
+                            </div>
+                        @endif
+                    @else
+                        <a
+                            href="{{ route('persyaratan', [
+                                'jenis' => 'magang',
+                                'kategori' => 'Magang SMA/SMK'
+                            ]) }}"
+                            class="mt-8 flex min-h-[40px] items-center justify-center gap-2 rounded-lg bg-orange-50 px-3 py-2 text-xs font-bold text-orange-600 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:bg-orange-500 hover:text-white hover:shadow-lg hover:shadow-orange-500/30"
+                        >
+                            Daftar Sekarang
+                            <span aria-hidden="true">→</span>
+                        </a>
+                    @endif
                 </article>
 
                 {{-- CARD MAGANG MAHASISWA --}}
@@ -279,16 +294,34 @@
                         <li>Mampu bekerja sama dan bertanggung jawab</li>
                     </ul>
 
-                    <a
-                        href="{{ route('persyaratan', [
-                            'jenis' => 'magang',
-                            'kategori' => 'Magang Mahasiswa'
-                        ]) }}"
-                        class="mt-8 flex min-h-[40px] items-center justify-center gap-2 rounded-lg bg-blue-50 px-3 py-2 text-xs font-bold text-blue-600 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:bg-blue-600 hover:text-white hover:shadow-lg hover:shadow-blue-600/30"
-                    >
-                        Daftar Sekarang
-                        <span aria-hidden="true">→</span>
-                    </a>
+                    @if($activeApplication)
+                        @if(
+                            $activeApplication->job_type === 'internship' &&
+                            $activeApplication->internship_category === 'Magang Mahasiswa'
+                        )
+                            <a href="{{ route('pelamar.dashboard', ['tab' => 'lamaran']) }}"
+                                class="mt-8 flex min-h-[40px] items-center justify-center gap-2 rounded-lg bg-emerald-50 px-3 py-2 text-xs font-bold text-emerald-700">
+                                <span>✓</span>
+                                Sudah Dilamar
+                            </a>
+                        @else
+                            <div class="mt-8 flex min-h-[40px] items-center justify-center gap-2 rounded-lg bg-red-50 px-3 py-2 text-xs font-bold text-red-600">
+                                <span>🔒</span>
+                                Pendaftaran Terkunci
+                            </div>
+                        @endif
+                    @else
+                        <a
+                            href="{{ route('persyaratan', [
+                                'jenis' => 'magang',
+                                'kategori' => 'Magang Mahasiswa'
+                            ]) }}"
+                            class="mt-8 flex min-h-[40px] items-center justify-center gap-2 rounded-lg bg-blue-50 px-3 py-2 text-xs font-bold text-blue-600 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:bg-blue-600 hover:text-white hover:shadow-lg hover:shadow-blue-600/30"
+                        >
+                            Daftar Sekarang
+                            <span aria-hidden="true">→</span>
+                        </a>
+                    @endif
                 </article>
 
             </div>

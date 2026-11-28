@@ -66,6 +66,7 @@
 
             </div>
 
+                        
             {{-- FORM --}}
             <form
                 id="internship-form"
@@ -76,10 +77,18 @@
             >
                 @csrf
 
+                {{-- JENIS LAMARAN --}}
                 <input
                     type="hidden"
                     name="job_type"
                     value="internship"
+                >
+
+                {{-- POSISI LAMARAN --}}
+                <input
+                    type="hidden"
+                    name="posisi"
+                    value="{{ request('posisi', request('position', 'Program Magang')) }}"
                 >
 
                 {{-- TAHAP 1: DATA PRIBADI DAN PENDIDIKAN --}}
@@ -963,6 +972,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     });
 
+
+    // KIRIM LAMARAN KE LARAVEL
+    submitButton.addEventListener('click', function () {
+
+        // Periksa seluruh dokumen dan persetujuan
+        if (!validateFields(step2)) {
+            return;
+        }
 
     // KIRIM LAMARAN KE LARAVEL
     submitButton.addEventListener('click', function () {

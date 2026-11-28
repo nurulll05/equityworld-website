@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -34,6 +35,7 @@ class JobApplication extends Model
         // DATA PENDIDIKAN
         'education',
         'university',
+        'internship_category',
         'major',
         'semester',
 
@@ -50,7 +52,7 @@ class JobApplication extends Model
         'cover_letter_path',
         'supporting_documents',
 
-        // STATUS LAMARAN
+        // PERSETUJUAN DAN STATUS
         'agreement',
         'status',
     ];
@@ -63,12 +65,10 @@ class JobApplication extends Model
         'birth_date' => 'date',
         'internship_start_date' => 'date',
         'internship_end_date' => 'date',
-
         'semester' => 'integer',
-
         'supporting_documents' => 'array',
-
         'agreement' => 'boolean',
+
     ];
 
     /**

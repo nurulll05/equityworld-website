@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use Illuminate\Support\Carbon;
+use App\Models\JobApplication;
 
 class AuthController extends Controller
 {
@@ -65,18 +66,24 @@ class AuthController extends Controller
             // Ambil data akun tanpa membuat sesi login baru.
             $user = User::where('email', $request->email)->first();
 
-            $sessionLifetime = (int) config('session.lifetime', 120);
-
-            $lastActivity = $user->active_session_last_activity
-                ? Carbon::parse($user->active_session_last_activity)
-                : null;
+            // Periksa status akun.
+            if (!$user->is_active) {
+                return redirect()->route('home')
+                    ->withErrors([
+                        'email' => 'Akun kamu sedang dinonaktifkan. Silakan hubungi administrator.'
+                    ])
+                    ->withInput($request->only('email'))
+                    ->with('open_auth_modal', 'login')
+                    ->with('auth_context', $authContext);
+            }
 
             // Periksa apakah akun masih aktif di perangkat lain.
+            // Sesi dianggap tidak aktif jika tidak ada aktivitas selama 30 menit.
             $deviceIsActive = $user->active_session_id
-                && $lastActivity
-                && $lastActivity->greaterThan(
-                    now()->subMinutes($sessionLifetime)
-                );
+                && $user->active_session_id !== $request->session()->getId()
+                && $user->active_session_last_activity
+                && Carbon::parse($user->active_session_last_activity)
+                    ->gt(now()->subMinutes(30));
 
             if ($deviceIsActive) {
                 return redirect()->route('home')
@@ -105,14 +112,31 @@ class AuthController extends Controller
 
             if ($user->role === 'pelamar') {
 
+                // Periksa apakah pelamar masih memiliki lamaran aktif.
+                $activeApplication = JobApplication::where('user_id', $user->id)
+                    ->whereNotIn('status', ['ditolak', 'dibatalkan'])
+                    ->latest()
+                    ->first();
+
+                // Jika memiliki lamaran aktif, arahkan ke Status Lamaran.
+                if ($activeApplication) {
+                    $request->session()->forget('url.intended');
+
+                    return redirect()
+                        ->route('pelamar.dashboard', ['tab' => 'lamaran'])
+                        ->with('success', 'Selamat datang kembali, ' . $user->name . '!');
+                }
+
+                // Jika belum memiliki lamaran dan login melalui alur pendaftaran,
                 if ($authContext === 'application') {
                     return redirect()->intended(route('careers'))
                         ->with('success', 'Selamat datang, ' . $user->name . '!');
                 }
 
+                // Jika login biasa dan belum memiliki lamaran, arahkan ke Beranda.
                 $request->session()->forget('url.intended');
 
-                return redirect()->route('pelamar.dashboard')
+                return redirect()->route('home')
                     ->with('success', 'Selamat datang, ' . $user->name . '!');
             }
 
@@ -186,7 +210,7 @@ class AuthController extends Controller
                 ->with('auth_context', $authContext);
         }
 
-        User::create([
+        $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
@@ -194,16 +218,14 @@ class AuthController extends Controller
             'role' => 'pelamar',
         ]);
 
-        // Tidak login otomatis setelah registrasi
-
         return redirect()->route('home')
             ->with('open_auth_modal', 'login')
             ->with('auth_context', $authContext)
             ->with(
                 'success',
-                'Registrasi berhasil! Silakan login menggunakan akun yang baru dibuat.'
+                'Registrasi berhasil! Silakan login menggunakan akun yang telah dibuat.'
             );
-    }
+        }
 
     // 3. PROSES LOGOUT
     public function logout(Request $request)
